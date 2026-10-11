@@ -25,7 +25,7 @@ In a second terminal, from the same project folder:
 npm run dev:frontend
 ```
 
-Open **http://localhost:5173**. Keep the two terminals open. Press `Ctrl+C` in each to stop the app.
+Open **http://localhost:5173**. Keep the two terminals open. Press `Ctrl+C` in each to stop the app.e
 
 `docker:images` builds the fixed program used by workload containers. You can skip rebuilding it on later runs unless the workload-runner code changed or the image was removed.
 

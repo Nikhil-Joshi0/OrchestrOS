@@ -44,6 +44,8 @@ Choose a job count, arrival pattern, and workload type, then click Generate Work
 
 The same generation settings reproduce the same job specifications. Their database IDs can differ.
 
+The job queue starts each row with a state icon; completed jobs have a green check. Search by job name, type, worker, ID or container, combine status and worker filters, and click column headings to sort. **Latest updates** restores the default order. Counts and filters cover the loaded recent rows; the queue identifies when older jobs are outside that window. Age measures time since job creation. CPU and memory bars show requests relative to assigned worker capacity, including for finished jobs.
+
 A custom API batch must provide one arrival offset per job, in order from smallest to largest. The browser sends the **IMMEDIATE** arrival pattern directly; the backend creates zero offsets so every job is eligible immediately. Sleep jobs take 2-10 seconds, depending on the resource profile. Compute jobs use bounded work units appropriate to their type.
 
 ## 3. Reuse an existing batch

@@ -1,4 +1,11 @@
 const PATHS = {
+  check: "m6 12 4 4 8-8",
+  close: "m7 7 10 10M7 17 17 7",
+  clock: "M12 7v5l3 2",
+  search: "M21 21l-5-5M18 10a8 8 0 1 1-16 0 8 8 0 0 1 16 0",
+  sort: "m8 8 4-4 4 4M8 16l4 4 4-4",
+  arrowUp: "m7 10 5-5 5 5M12 5v14",
+  arrowDown: "m7 14 5 5 5-5M12 5v14",
   play: "m8 5 11 7-11 7Z",
   pause: "M8 5v14M16 5v14",
   stop: "M6 6h12v12H6Z",
@@ -18,7 +25,7 @@ export function Icon({ name, className = "" }) {
     <svg className={`icon ${className}`} viewBox="0 0 24 24" fill="none"
       stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"
       aria-hidden="true" focusable="false">
-      {name === "info" ? <circle cx="12" cy="12" r="9" /> : null}
+      {name === "info" || name === "clock" ? <circle cx="12" cy="12" r="9" /> : null}
       <path d={PATHS[name] ?? PATHS.info} />
     </svg>
   );

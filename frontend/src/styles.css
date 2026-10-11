@@ -809,6 +809,134 @@ a {
   text-align: left;
 }
 
+/* Kubernetes-style resource list: leading state, linked names, sortable columns. */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+.queue-panel .panel-head h2 { margin: 0; }
+.queue-order { gap: 8px; font-size: 0.8125rem; }
+.queue-order[aria-pressed="false"] { color: var(--muted); }
+.queue-toolbar {
+  display: flex;
+  gap: 16px;
+  align-items: end;
+  margin-bottom: 16px;
+}
+.queue-search { flex: 1; min-width: 0; }
+.queue-field-label {
+  display: block;
+  color: var(--muted);
+  font-size: 0.75rem;
+  margin-bottom: 6px;
+}
+.queue-search-input { position: relative; display: block; }
+.queue-search-input > .icon {
+  position: absolute;
+  left: 12px;
+  top: 14px;
+  color: var(--muted);
+  pointer-events: none;
+}
+.queue-search input, .queue-worker-filter select {
+  width: 100%;
+  min-height: 44px;
+  border: 1px solid var(--control-border);
+  border-radius: 6px;
+  padding: 10px 12px;
+  background: var(--surface);
+  color: var(--text);
+  font-size: 0.8125rem;
+}
+.queue-search input { padding-left: 38px; }
+.queue-search input::placeholder { color: var(--muted); }
+.queue-worker-filter { width: 190px; }
+.queue-filters { gap: 8px; margin-bottom: 8px; }
+.queue-filters .chip { display: inline-flex; align-items: center; gap: 8px; }
+.queue-filter-count { font-variant-numeric: tabular-nums; font-weight: 600; }
+.queue-summary { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-bottom: 12px; }
+.queue-summary .hint { margin: 0; }
+.queue-summary .link { flex-shrink: 0; font-size: 0.8125rem; }
+.queue-table { border-collapse: separate; border-spacing: 0; }
+.queue-table th {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--border);
+}
+.queue-sort {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 32px;
+  padding: 2px 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+}
+.queue-sort:hover, .queue-table th[aria-sort="ascending"], .queue-table th[aria-sort="descending"] { color: var(--accent-text); }
+.queue-sort .icon { width: 12px; height: 12px; }
+.queue-table .queue-health-column {
+  position: sticky;
+  left: 0;
+  width: 40px;
+  padding-inline: 8px;
+  background: var(--surface);
+  z-index: 1;
+}
+.queue-table th.queue-health-column { z-index: 3; background: var(--surface-subtle); }
+.queue-table tbody tr:nth-child(even) .queue-health-column { background: var(--surface-subtle); }
+.queue-table .job-row:hover .queue-health-column, .queue-table .job-row:focus-within .queue-health-column,
+.queue-table .job-row.is-selected .queue-health-column { background: var(--accent-soft); }
+.queue-state-icon {
+  display: grid;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  color: var(--muted);
+  background: var(--surface-hover);
+}
+.queue-state-icon .icon { width: 16px; height: 16px; stroke-width: 2; }
+.queue-state-completed { background: var(--success); color: var(--surface); }
+.queue-state-failed, .queue-state-cancelled { background: var(--danger); color: var(--surface); }
+.queue-state-running { background: var(--accent); color: var(--surface); }
+.queue-state-scheduled { background: var(--accent-soft); color: var(--accent-text); }
+.queue-state-interrupted { background: var(--warning-soft); color: var(--warning); }
+.queue-job-name { min-height: 28px; font-weight: 500; }
+.queue-table .queue-job-cell { min-width: 180px; }
+.queue-job-type { display: block; font-size: 0.75rem; }
+.queue-resource { position: relative; display: flex; align-items: center; gap: 8px; font-variant-numeric: tabular-nums; }
+.queue-resource-track { width: 52px; height: 16px; background: var(--surface-hover); overflow: hidden; }
+.queue-resource-track > span { display: block; height: 100%; background: var(--accent); }
+.queue-resource-memory .queue-resource-track > span { background: var(--chart-secondary); }
+.queue-table .status::before { display: none; }
+.queue-table .status { font-size: 0.75rem; font-weight: 400; }
+.queue-table .status-running { color: var(--accent-text); background: var(--accent-soft); }
+.queue-table .status-interrupted { color: var(--warning); background: var(--warning-soft); }
+.queue-resource-note { margin: 14px 0 0; line-height: 1.6; }
+.queue-empty { display: flex; align-items: center; gap: 12px; min-height: 100px; color: var(--muted); }
+.queue-empty p { margin: 0; }
+.queue-table-scroll:focus-visible { outline: 2px solid var(--accent-text); outline-offset: 3px; }
+@media (max-width: 700px) {
+  .queue-toolbar { flex-direction: column; align-items: stretch; gap: 12px; }
+  .queue-worker-filter { width: 100%; }
+  .queue-search input, .queue-worker-filter select { font-size: 1rem; }
+  .queue-summary { align-items: start; }
+  .queue-summary .hint { line-height: 1.6; }
+  .queue-sort, .queue-job-name { min-height: 44px; }
+}
+
 /* Inspector and honest empty states. */
 .job-detail-viewport {
   height: 320px;

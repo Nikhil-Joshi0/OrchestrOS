@@ -326,6 +326,8 @@ export function OrchestratorConsole() {
 
           <JobQueue
             jobs={state.jobs}
+            workers={state.workers}
+            capturedAt={state.capturedAt}
             totalJobs={state.totals.jobs}
             selectedJobId={selectedJobId}
             filter={filter}
