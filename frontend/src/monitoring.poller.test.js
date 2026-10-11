@@ -9,22 +9,25 @@ function deferred() {
   const promise = new Promise((yes, no) => { resolve = yes; reject = no; });
   return { promise, resolve, reject };
 }
-function fixture(sources) {
+function fixture(sources, options = {}) {
   const updates = [];
   const errors = [];
+  const statuses = [];
   const timers = new Map();
   let nextId = 0;
   const poller = createMonitoringPoller({
     sources,
     onData: (key, value) => updates.push({ key, value }),
     onError: (error) => errors.push(error),
+    onStatus: (key, status) => statuses.push({ key, ...status }),
     schedule: (callback, delay) => {
       timers.set(++nextId, { callback, delay });
       return nextId;
     },
     unschedule: (id) => timers.delete(id),
+    ...options,
   });
-  return { poller, updates, errors, timers };
+  return { poller, updates, errors, statuses, timers };
 }
 const source = (fetch, intervalMs = 2000) => ({ fetch, intervalMs, label: "Metrics" });
 
@@ -47,6 +50,52 @@ test("live worker counts continue updating while history hangs and timings fail"
     await flush();
     assert.deepEqual(f.updates.at(-1), { key: "overview", value: { running: 0 } });
     assert.match(f.errors.at(-1), /Timing endpoint unavailable/);
+  } finally { f.poller.stop(); }
+});
+
+test("channel status distinguishes missing, stale and recovered metrics and health", async () => {
+  let timestamp = 1000;
+  let fail = true;
+  let value = 0;
+  const f = fixture({ health: source(async () => {
+    if (fail) throw new Error("Service unavailable");
+    return value;
+  }, 10_000) }, { clock: () => timestamp });
+  try {
+    assert.equal(f.statuses[0].loading, true);
+    await flush();
+    assert.equal(f.statuses.at(-1).lastSuccessAt, null);
+    assert.equal(f.statuses.at(-1).lastCheckedAt, 1000);
+    assert.match(f.statuses.at(-1).error, /Service unavailable/);
+    fail = false;
+    timestamp = 2000;
+    f.poller.refresh();
+    await flush();
+    assert.equal(f.updates.at(-1).value, 0, "a measured zero remains valid data");
+    assert.equal(f.statuses.at(-1).error, null);
+    assert.equal(f.statuses.at(-1).lastSuccessAt, 2000);
+    fail = true;
+    timestamp = 3000;
+    const [id, timer] = [...f.timers].find(([, timer]) => timer.delay === 10_000);
+    f.timers.delete(id);
+    timer.callback();
+    await flush();
+    assert.equal(f.updates.length, 1, "failed refresh does not overwrite the saved value");
+    assert.equal(f.statuses.at(-1).lastSuccessAt, 2000);
+    assert.equal(f.statuses.at(-1).lastCheckedAt, 3000);
+    value = 5;
+    fail = false;
+    timestamp = 4000;
+    f.poller.refresh();
+    await flush();
+    assert.equal(f.updates.at(-1).value, 5);
+    assert.equal(f.statuses.at(-1).lastSuccessAt, 4000);
+    assert.equal(f.errors.at(-1), null);
+    f.poller.stop();
+    const statusCount = f.statuses.length;
+    f.poller.refresh();
+    await flush();
+    assert.equal(f.statuses.length, statusCount);
   } finally { f.poller.stop(); }
 });
 

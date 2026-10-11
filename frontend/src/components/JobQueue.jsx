@@ -33,8 +33,7 @@ export function JobQueue({
     <section id="job-queue" className="panel queue-panel" aria-label="Job queue">
       <header className="panel-head">
         <div>
-          <p className="eyebrow">Live job queue</p>
-          <h2>{totalJobs} job(s) in the database</h2>
+          <h2>Job queue <span className="section-count">{totalJobs} {totalJobs === 1 ? "job" : "jobs"}</span></h2>
         </div>
         <p className="hint hint-inline">
           Latest updates first{totalJobs > jobs.length ? ` · showing ${jobs.length}` : ""}
@@ -49,7 +48,7 @@ export function JobQueue({
             aria-pressed={filter === option}
             onClick={() => onFilterChange(option)}
           >
-            {option === "ALL" ? "All" : option}
+            {option === "ALL" ? "All" : option[0] + option.slice(1).toLowerCase()}
           </button>
         ))}
       </div>

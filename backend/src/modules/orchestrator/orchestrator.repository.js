@@ -21,12 +21,13 @@ export const prismaOrchestratorRepository = {
       orderBy: [{ scheduledAt: "asc" }, { arrivalAt: "asc" }, { id: "asc" }],
     });
   },
-  async listJobStates(limit) {
-    const jobs = await prisma.job.findMany({
+  async listJobStates(limit, client = prisma, where) {
+    const jobs = await client.job.findMany({
       // Choose the latest changes before applying the dashboard's row limit.
       // Scheduler ordering is independent of this display order.
       orderBy: [{ updatedAt: "desc" }, { createdAt: "desc" }, { batchSequence: "asc" }, { id: "asc" }],
       take: limit,
+      where,
       include: {
         assignedWorker: { select: { name: true } },
         allocations: {
@@ -63,11 +64,11 @@ export const prismaOrchestratorRepository = {
       execution: executions[0] ?? null,
     }));
   },
-  listWorkers() {
-    return prisma.worker.findMany({ orderBy: { name: "asc" } });
+  listWorkers(client = prisma) {
+    return client.worker.findMany({ orderBy: { name: "asc" } });
   },
-  async countJobsByStatus() {
-    const groups = await prisma.job.groupBy({
+  async countJobsByStatus(client = prisma) {
+    const groups = await client.job.groupBy({
       by: ["status"],
       _count: { _all: true },
     });
@@ -76,6 +77,31 @@ export const prismaOrchestratorRepository = {
       counts[group.status] = group._count._all;
     }
     return counts;
+  },
+  /** Read global counters and bounded table rows from the same database snapshot. */
+  async readState(limit, now) {
+    return prisma.$transaction(async (tx) => {
+      const [rows, workers, statusCounts, runningRows, scheduledUnplaced,
+        scheduledReserved, eligibleNow, waitingForArrival, activeReservations] = await Promise.all([
+        this.listJobStates(limit, tx),
+        this.listWorkers(tx),
+        this.countJobsByStatus(tx),
+        this.listJobStates(undefined, tx, { status: JobStatus.RUNNING }),
+        tx.job.count({ where: { status: JobStatus.SCHEDULED, assignedWorkerId: null } }),
+        tx.job.count({ where: {
+          status: JobStatus.SCHEDULED,
+          assignedWorkerId: { not: null },
+          allocations: { some: { status: AllocationStatus.RESERVED } },
+        } }),
+        tx.job.count({ where: {
+          status: { in: [JobStatus.QUEUED, JobStatus.WAITING] }, arrivalAt: { lte: now },
+        } }),
+        tx.job.count({ where: { status: JobStatus.QUEUED, arrivalAt: { gt: now } } }),
+        tx.resourceAllocation.count({ where: { status: AllocationStatus.RESERVED } }),
+      ]);
+      return { rows, workers, statusCounts, runningRows, scheduledUnplaced,
+        scheduledReserved, eligibleNow, waitingForArrival, activeReservations };
+    }, { isolationLevel: "RepeatableRead" });
   },
   findJobById(jobId) {
     return prisma.job.findUnique({ where: { id: jobId } });

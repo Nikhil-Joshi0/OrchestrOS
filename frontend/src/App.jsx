@@ -3,6 +3,7 @@ import { fetchHealthStatus } from "./api";
 import { MonitoringPanel } from "./MonitoringPanel.jsx";
 import { OrchestratorConsole } from "./OrchestratorConsole.jsx";
 import { Icon } from "./components/Icon.jsx";
+import { createMonitoringPoller } from "./monitoring.poller.js";
 const currentCapabilities = [
   "MySQL-backed job records",
   "Controlled job lifecycle",
@@ -22,13 +23,30 @@ const futureCapabilities = [
   "Worker-level failure recovery",
   "Preemption and individual runtime cancellation",
 ];
+export function ServiceHealth({ health, error, status }) {
+  const apiState = error ? "Unavailable"
+    : health?.status === "ok" ? "Online"
+      : health?.status === "degraded" ? "Degraded" : "Checking";
+  const databaseState = error ? "unknown" : health?.dependencies?.database ?? "checking";
+  return (
+    <span className="service-health" role="status">
+      <span className={apiState === "Online" && databaseState === "up" ? "healthy" : "pending"}>
+        API {apiState.toLowerCase()} · database {databaseState === "up" ? "connected" : databaseState}
+      </span>
+      {status?.lastCheckedAt ? (
+        <span>Checked {new Date(status.lastCheckedAt).toLocaleTimeString()}</span>
+      ) : null}
+      <span>Local compute. Persistent state.</span>
+    </span>
+  );
+}
 export function App() {
   const [theme, setTheme] = useState(() => {
     try {
       const saved = localStorage.getItem("orchestros-console-theme");
-      return ["light", "dark", "system"].includes(saved) ? saved : "dark";
+      return ["light", "dark", "system"].includes(saved) ? saved : "light";
     } catch {
-      return "dark";
+      return "light";
     }
   });
   const [activeSection, setActiveSection] = useState("console");
@@ -43,6 +61,7 @@ export function App() {
   }, []);
   const [health, setHealth] = useState(null);
   const [error, setError] = useState(null);
+  const [healthStatus, setHealthStatus] = useState(null);
   useEffect(() => {
     document.documentElement.dataset.theme = theme;
     try {
@@ -52,38 +71,22 @@ export function App() {
     }
   }, [theme]);
   useEffect(() => {
-    const controller = new AbortController();
-    fetchHealthStatus(controller.signal)
-      .then((status) => {
-        setHealth(status);
-        setError(null);
-      })
-      .catch((reason) => {
-        if (!controller.signal.aborted) {
-          setError(
-            reason instanceof Error ? reason.message : "Health check failed",
-          );
-        }
-      });
-    return () => controller.abort();
+    const poller = createMonitoringPoller({
+      sources: { health: { label: "Service health", fetch: fetchHealthStatus, intervalMs: 10_000 } },
+      onData: (_, status) => setHealth(status),
+      onError: setError,
+      onStatus: (_, status) => setHealthStatus(status),
+    });
+    return () => poller.stop();
   }, []);
-  const apiState =
-    health?.status === "ok"
-      ? "Online"
-      : health?.status === "degraded"
-        ? "Degraded"
-        : error
-          ? "Unavailable"
-          : "Checking";
-  const databaseState = health?.dependencies.database ?? "checking";
   return (
     <main className="shell" id="overview">
       <a className="skip-link" href="#console">Skip to controls</a>
       <header className="console-header">
         <a className="console-identity" href="#console" aria-label="OrchestrOS control panel">
           <span className="logo-mark"><Icon name="workflow" /></span>
-          <strong>Orchestrator</strong>
-          <span className="console-label">/ operator console</span>
+          <strong>OrchestrOS</strong>
+          <span className="console-label">Workload console</span>
         </a>
         <nav aria-label="Dashboard sections">
           {[
@@ -96,11 +99,16 @@ export function App() {
         </nav>
         <select className="theme-select" aria-label="Color theme" value={theme}
           onChange={(event) => setTheme(event.target.value)}>
-          <option value="dark">Dark</option>
           <option value="light">Light</option>
+          <option value="dark">Dark</option>
           <option value="system">System</option>
         </select>
       </header>
+
+      <div className="workspace-heading">
+        <h1>Workload console</h1>
+        <p>Create jobs, choose a policy, and follow each run.</p>
+      </div>
 
       {error ? (
         <p className="error-banner">
@@ -129,8 +137,9 @@ export function App() {
               row, so concurrent jobs can never over-allocate it. The job then
               runs as one locked-down container limited to exactly that
               reservation, and recording its result releases the capacity in a
-              single transaction. Every number on this page is read back from
-              those same records, so it cannot disagree with them.
+              single transaction. The dashboard reads job and resource records
+              from MySQL. Panels refresh independently, and the job table shows
+              recent updates.
             </p>
             <ul>
               {currentCapabilities.map((capability) => (
@@ -150,12 +159,7 @@ export function App() {
       </details>
       <footer className="workspace-footer">
         <span>OrchestrOS</span>
-        <span className="service-health" role="status">
-          <span className={apiState === "Online" && databaseState === "up" ? "healthy" : "pending"}>
-            API {apiState.toLowerCase()} · database {databaseState === "up" ? "connected" : databaseState}
-          </span>
-          <span>Local compute. Persistent state.</span>
-        </span>
+        <ServiceHealth health={health} error={error} status={healthStatus} />
       </footer>
     </main>
   );

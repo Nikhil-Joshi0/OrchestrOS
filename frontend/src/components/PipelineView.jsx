@@ -32,8 +32,7 @@ export function PipelineView({ stageCounts, selected }) {
     <section id="pipeline" className="panel pipeline-panel" aria-label="Pipeline">
       <header className="panel-head">
         <div>
-          <p className="eyebrow">Pipeline</p>
-          <h2>Where every job is</h2>
+          <h2>Job pipeline</h2>
         </div>
         {selected ? (
           <p className="hint hint-inline">

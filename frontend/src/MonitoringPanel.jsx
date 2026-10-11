@@ -9,6 +9,7 @@ import {
 import { createMonitoringPoller } from "./monitoring.poller.js";
 import { CapacityGauge } from "./components/CapacityGauge.jsx";
 import { Icon } from "./components/Icon.jsx";
+import { reservationChart } from "./reservation.chart.js";
 
 const REFRESH_SECONDS = 2;
 const WINDOW_MINUTES = 60;
@@ -39,49 +40,79 @@ function seconds(value) {
   if (value < 1) return `${Math.round(value * 1000)}ms`;
   return `${Math.round(value * 100) / 100}s`;
 }
-/** Inline sparkline of recorded cluster utilization, drawn without a chart library. */
-function Sparkline({ history }) {
-  if (!history || history.points.length < 2) {
+function sampleTime(value) {
+  return new Date(value).toLocaleString(undefined, {
+    month: "short", day: "numeric", hour: "2-digit", minute: "2-digit", second: "2-digit",
+  });
+}
+/** Recorded reservations; this chart does not measure host CPU or RAM usage. */
+function Sparkline({ history, status }) {
+  if (!history || history.points.length === 0) {
     return (
       <p className="muted spark-placeholder">
-        {history?.pointCount === 0
-          ? "No samples recorded yet. The sampler writes one every few seconds."
-          : "Collecting samples…"}
+        {status?.error
+          ? "Recorded samples unavailable. Use Refresh now in Monitoring tools to retry."
+          : history
+            ? "No recorded samples in this window. Use Save snapshot in Monitoring tools to record one now."
+            : "Loading recorded samples…"}
       </p>
     );
   }
   const points = history.points;
   const width = 600;
   const height = 90;
-  const step = width / Math.max(1, points.length - 1);
-  const line = (pick) =>
-    points
-      .map((_, index) => {
-        const x = index * step;
-        const y = height - pick(index) * height;
-        return `${index === 0 ? "M" : "L"}${x.toFixed(1)},${y.toFixed(1)}`;
-      })
-      .join(" ");
-  const cpuPath = line((index) => points[index]?.cpuUtilization ?? 0);
-  const memoryPath = line((index) => points[index]?.memoryUtilization ?? 0);
+  const chart = reservationChart(points, width, height);
   return (
     <figure className="spark">
-      <svg
-        viewBox={`0 0 ${width} ${height}`}
-        preserveAspectRatio="none"
-        role="img"
-        aria-label={`Cluster utilization over the last ${history.windowMinutes} minutes`}
-      >
-        <g className="spark-grid">
-          {[0, 22.5, 45, 67.5, 90].map((y) => <line key={y} x1="0" x2={width} y1={y} y2={y} />)}
-        </g>
-        <path d={cpuPath} className="spark-cpu" />
-        <path d={memoryPath} className="spark-memory" />
-      </svg>
+      <div className="spark-plot">
+        <div className="spark-scale" aria-hidden="true">
+          {[100, 75, 50, 25, 0].map((value) => <span key={value}>{value}%</span>)}
+        </div>
+        <svg
+          viewBox={`0 0 ${width} ${height}`}
+          preserveAspectRatio="none"
+          role="img"
+          aria-label={`Recorded CPU and memory reservations, from ${sampleTime(chart.start)} to ${sampleTime(chart.end)}, as percentages of worker capacity. Sample values are listed below.`}
+        >
+          <g className="spark-grid">
+            {[0, 22.5, 45, 67.5, 90].map((y) => <line key={y} x1="0" x2={width} y1={y} y2={y} />)}
+          </g>
+          <path d={chart.cpuPath} className="spark-cpu" />
+          <path d={chart.memoryPath} className="spark-memory" />
+          {points.length === 1 ? (
+            <>
+              <circle cx={chart.coordinates[0].x} cy={chart.coordinates[0].cpuY} r="2" className="spark-point-cpu" />
+              <circle cx={chart.coordinates[0].x} cy={chart.coordinates[0].memoryY} r="2" className="spark-point-memory" />
+            </>
+          ) : null}
+        </svg>
+      </div>
+      <div className="spark-times" aria-hidden="true">
+        <span>{sampleTime(chart.start)}</span><span>{sampleTime(chart.end)}</span>
+      </div>
       <figcaption>
         <span className="key key-cpu">CPU</span>
         <span className="key key-memory">Memory</span>
       </figcaption>
+      <p className="hint">Lines connect recorded samples. Time between samples is unmeasured. Values show reserved limits, not actual host usage.</p>
+      {status?.error ? (
+        <p className="hint">History refresh failed. Showing the last recorded samples; use Refresh now to retry.</p>
+      ) : null}
+      <details className="sample-values">
+        <summary>Sample values</summary>
+        <div className="table-scroll">
+          <table className="grid">
+            <caption className="sr-only">Recorded reservations as percentages of worker capacity</caption>
+            <thead><tr><th scope="col">Captured at</th><th scope="col">CPU reserved (%)</th><th scope="col">Memory reserved (%)</th></tr></thead>
+            <tbody>{points.map((point) => (
+              <tr key={point.capturedAt}>
+                <td><time dateTime={point.capturedAt}>{sampleTime(point.capturedAt)}</time></td>
+                <td>{percent(point.cpuUtilization)}</td><td>{percent(point.memoryUtilization)}</td>
+              </tr>
+            ))}</tbody>
+          </table>
+        </div>
+      </details>
     </figure>
   );
 }
@@ -90,6 +121,7 @@ export function MonitoringPanel() {
   const [jobs, setJobs] = useState(null);
   const [history, setHistory] = useState(null);
   const [error, setError] = useState(null);
+  const [readStatus, setReadStatus] = useState({});
   const [busy, setBusy] = useState(false);
   const poller = useRef(null);
   useEffect(() => {
@@ -102,6 +134,7 @@ export function MonitoringPanel() {
       },
       onData: (key, data) => setters[key](data),
       onError: setError,
+      onStatus: (key, status) => setReadStatus((current) => ({ ...current, [key]: status })),
     });
     poller.current = current;
     const refreshLive = () => current.refresh(["overview", "jobs"]);
@@ -126,11 +159,11 @@ export function MonitoringPanel() {
     }
   };
   return <MonitoringView overview={overview} jobs={jobs} history={history}
-    error={error} busy={busy} onRefresh={() => poller.current?.refresh()} onCapture={() => void onCapture()} />;
+    error={error} readStatus={readStatus} busy={busy} onRefresh={() => poller.current?.refresh()} onCapture={() => void onCapture()} />;
 }
 
 /** Display metrics independently of polling so every loading/data state can be reviewed. */
-export function MonitoringView({ overview, jobs, history, error, busy, onRefresh, onCapture }) {
+export function MonitoringView({ overview, jobs, history, error, readStatus = {}, busy, onRefresh, onCapture }) {
   return (
     <section className="monitor" aria-label="Live monitoring">
       <header className="monitor-head">
@@ -214,33 +247,43 @@ export function MonitoringView({ overview, jobs, history, error, busy, onRefresh
               <dl className="stats">
                 <div>
                   <dt>Finished</dt>
-                  <dd>{jobs?.terminalInWindow ?? 0}</dd>
+                  <dd>{jobs?.terminalInWindow ?? "—"}</dd>
                 </div>
                 <div>
                   <dt>Per minute</dt>
-                  <dd>{jobs?.completionsPerMinute ?? 0}</dd>
+                  <dd>{jobs?.completionsPerMinute ?? "—"}</dd>
                 </div>
                 <div>
                   <dt>Success rate</dt>
                   <dd className="healthy">
-                    {jobs?.successRate === null || jobs === null
-                      ? "-"
+                    {jobs?.successRate == null
+                      ? "—"
                       : percent(jobs.successRate)}
                   </dd>
                 </div>
               </dl>
+              <p className="hint" role="status">
+                {readStatus.jobs?.error
+                  ? jobs
+                    ? "Job metrics refresh failed. Showing the last successful read; use Refresh now to retry."
+                    : "Job metrics unavailable. Use Refresh now in Monitoring tools to retry."
+                  : !jobs ? "Loading job metrics…" : null}
+                {readStatus.jobs?.lastSuccessAt
+                  ? ` Last read ${new Date(readStatus.jobs.lastSuccessAt).toLocaleTimeString()}.`
+                  : ""}
+              </p>
             </article>
           </div>
 
           <article className="tile wide">
             <div className="chart-heading">
-              <h3>Recorded utilization</h3>
+              <h3>Recorded CPU and memory reservations</h3>
               <span className="mono" title="Saved worker snapshots draw this chart. History is pruned according to the configured retention period.">
-                {history ? `${history.pointCount} chart points over ${history.windowMinutes} min · ` : ""}
+                {history ? `${history.pointCount} chart points in the last ${history.windowMinutes} min · ` : ""}
                 {overview.samples.stored} saved worker snapshots
               </span>
             </div>
-            <Sparkline history={history} />
+            <Sparkline history={history} status={readStatus.history} />
           </article>
 
           <article className="tile wide">

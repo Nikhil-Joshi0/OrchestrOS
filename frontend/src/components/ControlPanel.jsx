@@ -4,27 +4,27 @@ const COUNTS = [10, 25, 50, 100];
 const ARRIVALS = [
   {
     value: "IMMEDIATE",
-    label: "Immediate - all jobs ready at once",
+    label: "Immediate · ready now",
   },
-  { value: "LIGHT", label: "Light - 20-40s apart" },
-  { value: "MEDIUM", label: "Medium - 8-16s apart" },
-  { value: "HEAVY", label: "Heavy - 2-6s apart" },
-  { value: "CONSTANT", label: "Constant - every 10s" },
-  { value: "BURST", label: "Burst - groups of 5, 30s apart" },
-  { value: "INCREASING", label: "Increasing - ramping up" },
-  { value: "DECREASING", label: "Decreasing - ramping down" },
-  { value: "PERIODIC", label: "Periodic - repeating profile" },
+  { value: "LIGHT", label: "Light · 20–40s apart" },
+  { value: "MEDIUM", label: "Medium · 8–16s apart" },
+  { value: "HEAVY", label: "Heavy · 2–6s apart" },
+  { value: "CONSTANT", label: "Constant · every 10s" },
+  { value: "BURST", label: "Burst · 5 jobs every 30s" },
+  { value: "INCREASING", label: "Increasing · ramp up" },
+  { value: "DECREASING", label: "Decreasing · ramp down" },
+  { value: "PERIODIC", label: "Periodic · repeating" },
 ];
 const POLICIES = [
-  { value: "FCFS", label: "FCFS - first come, first served" },
-  { value: "SJF", label: "SJF - shortest job first" },
-  { value: "PRIORITY", label: "Priority - highest priority, with aging" },
-  { value: "ROUND_ROBIN", label: "Round Robin - rotate by quantum" },
+  { value: "FCFS", label: "FCFS · arrival order" },
+  { value: "SJF", label: "SJF · shortest first" },
+  { value: "PRIORITY", label: "Priority · with aging" },
+  { value: "ROUND_ROBIN", label: "Round Robin · round order" },
 ];
 const STRATEGIES = [
-  { value: "FIRST_FIT", label: "First Fit - first worker that fits" },
-  { value: "LEAST_LOADED", label: "Least Loaded - lowest current load" },
-  { value: "RESOURCE_AWARE", label: "Resource-Aware - best balanced fit" },
+  { value: "FIRST_FIT", label: "First Fit · first that fits" },
+  { value: "LEAST_LOADED", label: "Least Loaded · lowest load" },
+  { value: "RESOURCE_AWARE", label: "Resource-Aware · balanced fit" },
 ];
 export function ControlPanel(props) {
   const {
@@ -44,8 +44,7 @@ export function ControlPanel(props) {
     <section className="panel" aria-label="Orchestrator controls">
       <header className="panel-head">
         <div>
-          <p className="eyebrow">Control panel</p>
-          <h2>Operate the orchestrator</h2>
+          <h2>Prepare a run</h2>
         </div>
         <button
           type="button"
@@ -53,7 +52,7 @@ export function ControlPanel(props) {
           onClick={props.onDemo}
           disabled={disabled || autoRunning}
         >
-          <Icon name="play" />Demo Mode - generate 10 and run
+          <Icon name="play" />Try a demo · 10 jobs
         </button>
       </header>
 
@@ -109,14 +108,14 @@ export function ControlPanel(props) {
               })
             }
           >
-            <option value="SLEEP">Sleep - short pauses, easy to watch</option>
+            <option value="SLEEP">Sleep · short pauses</option>
             <option value="MIXED_COMPUTE">
-              Mixed compute - CPU, matrix, sort, data
+              Mixed compute
             </option>
-            <option value="CPU_INTENSIVE">CPU - bounded calculations</option>
-            <option value="SORTING">Sorting - small number arrays</option>
-            <option value="DATA_PROCESSING">Data - small record sets</option>
-            <option value="MATRIX_MULTIPLICATION">Matrix - small matrix products</option>
+            <option value="CPU_INTENSIVE">CPU calculations</option>
+            <option value="SORTING">Sorting</option>
+            <option value="DATA_PROCESSING">Data processing</option>
+            <option value="MATRIX_MULTIPLICATION">Matrix products</option>
           </select>
           <p className="hint">Generated jobs use 64-256 MiB and short, bounded workloads. Resources are sized automatically.</p>
 
@@ -141,12 +140,12 @@ export function ControlPanel(props) {
 
           <button
             type="button"
-            className="btn btn-primary"
+            className="btn btn-secondary"
             onClick={props.onGenerate}
             disabled={disabled}
           >
             <Icon name="plus" />
-            {busy === "generate" ? "Generating…" : "Generate Workload"}
+            {busy === "generate" ? "Generating…" : "Generate workload"}
           </button>
         </fieldset>
 
@@ -170,7 +169,7 @@ export function ControlPanel(props) {
 
           {policy === "ROUND_ROBIN" ? (
             <>
-              <label htmlFor="quantum">Time quantum (s)</label>
+              <label htmlFor="quantum">Recorded time quantum (s)</label>
               <input
                 id="quantum"
                 type="number"
@@ -182,6 +181,7 @@ export function ControlPanel(props) {
                   onTimeQuantumChange(Number(event.target.value))
                 }
               />
+              <p className="hint">The quantum is recorded for study runs. Running containers are not paused or resumed.</p>
             </>
           ) : null}
 
@@ -212,13 +212,14 @@ export function ControlPanel(props) {
 
           <button
             type="button"
-            className={autoRunning ? "btn btn-stop" : "btn btn-primary"}
+            className={autoRunning ? "btn btn-secondary" : "btn btn-primary"}
             onClick={props.onToggleAuto}
             disabled={disabled}
           >
             <Icon name={autoRunning ? "pause" : "play"} />
-            {autoRunning ? "Pause Orchestrator" : "Run Orchestrator"}
+            {autoRunning ? "Pause orchestrator" : "Run orchestrator"}
           </button>
+          <p className="hint">Pause stops new run requests. Containers already running continue.</p>
           <button type="button" className="btn btn-stop" onClick={props.onKillAll}
             disabled={disabled}>
             <Icon name="stop" />

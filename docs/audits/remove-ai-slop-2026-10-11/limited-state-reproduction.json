@@ -1,0 +1,46 @@
+{
+  "method": "Actual OrchestratorService.state with isolated repository fixtures; no database operations.",
+  "input": {
+    "latestJobs": 120,
+    "completedGlobally": 199,
+    "runningGlobally": 1,
+    "busyWorkerCpuAllocatedMillicores": 250,
+    "busyWorkerMemoryAllocatedMiB": 128
+  },
+  "result": {
+    "totals": {
+      "jobs": 200,
+      "eligibleNow": 0,
+      "waitingForArrival": 0,
+      "activeReservations": 0,
+      "runningContainers": 0
+    },
+    "stageCounts": {
+      "QUEUE": 0,
+      "SCHEDULER": 0,
+      "PLACEMENT": 0,
+      "RESERVATION": 0,
+      "EXECUTION": 0,
+      "COMPLETED": 120,
+      "TERMINATED": 0
+    },
+    "statusCounts": {
+      "COMPLETED": 199,
+      "RUNNING": 1
+    },
+    "workers": [
+      {
+        "id": "worker-1",
+        "name": "worker-1",
+        "status": "BUSY",
+        "cpuCapacityMillicores": 500,
+        "cpuAllocatedMillicores": 250,
+        "cpuUtilization": 0.5,
+        "memoryCapacityMiB": 512,
+        "memoryAllocatedMiB": 128,
+        "memoryUtilization": 0.25,
+        "runningJobs": []
+      }
+    ]
+  }
+}

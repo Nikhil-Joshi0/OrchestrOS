@@ -1,0 +1,2008 @@
+{
+  "summary": {
+    "method": "Actual React components rendered to static HTML with isolated fixtures; no browser layout, effects, live backend, or database operations.",
+    "fixtureValues": "Names, IDs, counts, dates and backend messages are audit fixtures, not measured production data.",
+    "comparison": "Same component/state fixture matrix as the baseline; new request-status metadata is supplied for the failed job-metrics state.",
+    "captures": 35,
+    "textNodeInstances": 1241,
+    "accessibleAndTitleInstances": 101,
+    "uniqueStrings": 293
+  },
+  "captures": [
+    {
+      "component": "App",
+      "source": "frontend/src/App.jsx",
+      "route": "/",
+      "state": "initial server markup (effects not run; details collapsed)",
+      "textNodes": [
+        "Skip to controls",
+        "Orchestrator",
+        "/ operator console",
+        "Control panel",
+        "Pipeline",
+        "Job queue",
+        "Monitoring",
+        "Dark",
+        "Light",
+        "System",
+        "Control panel",
+        "Operate the orchestrator",
+        "Demo Mode - generate 10 and run",
+        "1",
+        "Workload generator",
+        "Number of jobs",
+        "10 jobs",
+        "25 jobs",
+        "50 jobs",
+        "100 jobs",
+        "Arrival pattern",
+        "Immediate - all jobs ready at once",
+        "Light - 20-40s apart",
+        "Medium - 8-16s apart",
+        "Heavy - 2-6s apart",
+        "Constant - every 10s",
+        "Burst - groups of 5, 30s apart",
+        "Increasing - ramping up",
+        "Decreasing - ramping down",
+        "Periodic - repeating profile",
+        "Workload type",
+        "Sleep - short pauses, easy to watch",
+        "Mixed compute - CPU, matrix, sort, data",
+        "CPU - bounded calculations",
+        "Sorting - small number arrays",
+        "Data - small record sets",
+        "Matrix - small matrix products",
+        "Generated jobs use 64-256 MiB and short, bounded workloads. Resources are sized automatically.",
+        "Reproducibility",
+        "Deterministic seed",
+        "The same seed and settings reproduce job specifications and workload checksums. Timing can vary.",
+        "Generate Workload",
+        "2",
+        "Scheduling policy",
+        "Policy",
+        "FCFS - first come, first served",
+        "SJF - shortest job first",
+        "Priority - highest priority, with aging",
+        "Round Robin - order by scheduling rounds",
+        "3",
+        "Placement strategy",
+        "Strategy",
+        "First Fit - first worker that fits",
+        "Least Loaded - lowest current load",
+        "Resource-Aware - best balanced fit",
+        "Choose how jobs are ordered and which worker receives each job. The backend schedules and reserves capacity.",
+        "4",
+        "Run the orchestrator",
+        "Run Orchestrator",
+        "Pause stops new run requests. Containers already running continue.",
+        "Kill all workloads",
+        "Cleanup",
+        "Clear generated workload",
+        "Removes generated jobs that have not started scheduling, including future arrivals.",
+        "Clear finished jobs",
+        "Removes completed, failed, interrupted, and cancelled jobs. Pause the orchestrator before cleanup.",
+        "Loading orchestrator state…",
+        "Live monitoring",
+        "Cluster state",
+        "Monitoring tools",
+        "Live state updates automatically. Refresh reads it now; Save snapshot records worker values for the chart.",
+        "Refresh now",
+        "Save snapshot",
+        "Loading metrics…",
+        "Architecture and supported capabilities",
+        "Implemented now",
+        "Scheduled, reserved, executed, and measured",
+        "Seeded workloads become queued jobs, the scheduler picks the next job by policy, and placement chooses a logical worker. Reservation commits capacity inside a MySQL transaction that locks the worker row, so concurrent jobs can never over-allocate it. The job then runs as one locked-down container limited to exactly that reservation, and recording its result releases the capacity in a single transaction. The dashboard reads job and resource records from MySQL. Panels refresh independently, and the job table shows recent updates.",
+        "MySQL-backed job records",
+        "Controlled job lifecycle",
+        "Logical worker registry",
+        "Deterministic workload batches",
+        "FCFS, SJF, Priority, Round Robin scheduling",
+        "Resource-aware worker placement",
+        "Transaction-safe CPU and memory reservation",
+        "Controlled Docker workload execution",
+        "Reproducible result checksums",
+        "Live operational metrics and utilization history",
+        "Browser-driven orchestration with per-stage controls",
+        "Restart recovery and workload cleanup",
+        "Planned increments",
+        "Reactive autoscaling",
+        "Worker-level failure recovery",
+        "Preemption and individual runtime cancellation",
+        "OrchestrOS",
+        "API checking · database checking",
+        "Local compute. Persistent state."
+      ],
+      "namesAndDescriptions": [
+        {
+          "kind": "aria-label",
+          "text": "OrchestrOS control panel"
+        },
+        {
+          "kind": "aria-label",
+          "text": "Dashboard sections"
+        },
+        {
+          "kind": "aria-label",
+          "text": "Color theme"
+        },
+        {
+          "kind": "aria-label",
+          "text": "Orchestrator controls"
+        },
+        {
+          "kind": "aria-label",
+          "text": "Scheduling policy"
+        },
+        {
+          "kind": "aria-label",
+          "text": "Live monitoring"
+        },
+        {
+          "kind": "title",
+          "text": "Read the latest monitoring values without writing to the database"
+        },
+        {
+          "kind": "title",
+          "text": "Save one CPU and memory reservation snapshot per worker"
+        }
+      ]
+    },
+    {
+      "component": "ControlPanel",
+      "source": "frontend/src/components/ControlPanel.jsx",
+      "route": "/#console",
+      "state": "idle defaults",
+      "textNodes": [
+        "Control panel",
+        "Operate the orchestrator",
+        "Demo Mode - generate 10 and run",
+        "1",
+        "Workload generator",
+        "Number of jobs",
+        "10 jobs",
+        "25 jobs",
+        "50 jobs",
+        "100 jobs",
+        "Arrival pattern",
+        "Immediate - all jobs ready at once",
+        "Light - 20-40s apart",
+        "Medium - 8-16s apart",
+        "Heavy - 2-6s apart",
+        "Constant - every 10s",
+        "Burst - groups of 5, 30s apart",
+        "Increasing - ramping up",
+        "Decreasing - ramping down",
+        "Periodic - repeating profile",
+        "Workload type",
+        "Sleep - short pauses, easy to watch",
+        "Mixed compute - CPU, matrix, sort, data",
+        "CPU - bounded calculations",
+        "Sorting - small number arrays",
+        "Data - small record sets",
+        "Matrix - small matrix products",
+        "Generated jobs use 64-256 MiB and short, bounded workloads. Resources are sized automatically.",
+        "Reproducibility",
+        "Deterministic seed",
+        "The same seed and settings reproduce job specifications and workload checksums. Timing can vary.",
+        "Generate Workload",
+        "2",
+        "Scheduling policy",
+        "Policy",
+        "FCFS - first come, first served",
+        "SJF - shortest job first",
+        "Priority - highest priority, with aging",
+        "Round Robin - order by scheduling rounds",
+        "3",
+        "Placement strategy",
+        "Strategy",
+        "First Fit - first worker that fits",
+        "Least Loaded - lowest current load",
+        "Resource-Aware - best balanced fit",
+        "Choose how jobs are ordered and which worker receives each job. The backend schedules and reserves capacity.",
+        "4",
+        "Run the orchestrator",
+        "Run Orchestrator",
+        "Pause stops new run requests. Containers already running continue.",
+        "Kill all workloads",
+        "Cleanup",
+        "Clear generated workload",
+        "Removes generated jobs that have not started scheduling, including future arrivals.",
+        "Clear finished jobs",
+        "Removes completed, failed, interrupted, and cancelled jobs. Pause the orchestrator before cleanup."
+      ],
+      "namesAndDescriptions": [
+        {
+          "kind": "aria-label",
+          "text": "Orchestrator controls"
+        },
+        {
+          "kind": "aria-label",
+          "text": "Scheduling policy"
+        }
+      ]
+    },
+    {
+      "component": "ControlPanel",
+      "source": "frontend/src/components/ControlPanel.jsx",
+      "route": "/#console",
+      "state": "Round Robin",
+      "textNodes": [
+        "Control panel",
+        "Operate the orchestrator",
+        "Demo Mode - generate 10 and run",
+        "1",
+        "Workload generator",
+        "Number of jobs",
+        "10 jobs",
+        "25 jobs",
+        "50 jobs",
+        "100 jobs",
+        "Arrival pattern",
+        "Immediate - all jobs ready at once",
+        "Light - 20-40s apart",
+        "Medium - 8-16s apart",
+        "Heavy - 2-6s apart",
+        "Constant - every 10s",
+        "Burst - groups of 5, 30s apart",
+        "Increasing - ramping up",
+        "Decreasing - ramping down",
+        "Periodic - repeating profile",
+        "Workload type",
+        "Sleep - short pauses, easy to watch",
+        "Mixed compute - CPU, matrix, sort, data",
+        "CPU - bounded calculations",
+        "Sorting - small number arrays",
+        "Data - small record sets",
+        "Matrix - small matrix products",
+        "Generated jobs use 64-256 MiB and short, bounded workloads. Resources are sized automatically.",
+        "Reproducibility",
+        "Deterministic seed",
+        "The same seed and settings reproduce job specifications and workload checksums. Timing can vary.",
+        "Generate Workload",
+        "2",
+        "Scheduling policy",
+        "Policy",
+        "FCFS - first come, first served",
+        "SJF - shortest job first",
+        "Priority - highest priority, with aging",
+        "Round Robin - order by scheduling rounds",
+        "Recorded time quantum (s)",
+        "The quantum is recorded for study runs. Running containers are not paused or resumed.",
+        "3",
+        "Placement strategy",
+        "Strategy",
+        "First Fit - first worker that fits",
+        "Least Loaded - lowest current load",
+        "Resource-Aware - best balanced fit",
+        "Choose how jobs are ordered and which worker receives each job. The backend schedules and reserves capacity.",
+        "4",
+        "Run the orchestrator",
+        "Run Orchestrator",
+        "Pause stops new run requests. Containers already running continue.",
+        "Kill all workloads",
+        "Cleanup",
+        "Clear generated workload",
+        "Removes generated jobs that have not started scheduling, including future arrivals.",
+        "Clear finished jobs",
+        "Removes completed, failed, interrupted, and cancelled jobs. Pause the orchestrator before cleanup."
+      ],
+      "namesAndDescriptions": [
+        {
+          "kind": "aria-label",
+          "text": "Orchestrator controls"
+        },
+        {
+          "kind": "aria-label",
+          "text": "Scheduling policy"
+        }
+      ]
+    },
+    {
+      "component": "ControlPanel",
+      "source": "frontend/src/components/ControlPanel.jsx",
+      "route": "/#console",
+      "state": "auto-running",
+      "textNodes": [
+        "Control panel",
+        "Operate the orchestrator",
+        "Demo Mode - generate 10 and run",
+        "1",
+        "Workload generator",
+        "Number of jobs",
+        "10 jobs",
+        "25 jobs",
+        "50 jobs",
+        "100 jobs",
+        "Arrival pattern",
+        "Immediate - all jobs ready at once",
+        "Light - 20-40s apart",
+        "Medium - 8-16s apart",
+        "Heavy - 2-6s apart",
+        "Constant - every 10s",
+        "Burst - groups of 5, 30s apart",
+        "Increasing - ramping up",
+        "Decreasing - ramping down",
+        "Periodic - repeating profile",
+        "Workload type",
+        "Sleep - short pauses, easy to watch",
+        "Mixed compute - CPU, matrix, sort, data",
+        "CPU - bounded calculations",
+        "Sorting - small number arrays",
+        "Data - small record sets",
+        "Matrix - small matrix products",
+        "Generated jobs use 64-256 MiB and short, bounded workloads. Resources are sized automatically.",
+        "Reproducibility",
+        "Deterministic seed",
+        "The same seed and settings reproduce job specifications and workload checksums. Timing can vary.",
+        "Generate Workload",
+        "2",
+        "Scheduling policy",
+        "Policy",
+        "FCFS - first come, first served",
+        "SJF - shortest job first",
+        "Priority - highest priority, with aging",
+        "Round Robin - order by scheduling rounds",
+        "3",
+        "Placement strategy",
+        "Strategy",
+        "First Fit - first worker that fits",
+        "Least Loaded - lowest current load",
+        "Resource-Aware - best balanced fit",
+        "Choose how jobs are ordered and which worker receives each job. The backend schedules and reserves capacity.",
+        "4",
+        "Run the orchestrator",
+        "Pause Orchestrator",
+        "Pause stops new run requests. Containers already running continue.",
+        "Kill all workloads",
+        "Cleanup",
+        "Clear generated workload",
+        "Removes generated jobs that have not started scheduling, including future arrivals.",
+        "Clear finished jobs",
+        "Removes completed, failed, interrupted, and cancelled jobs. Pause the orchestrator before cleanup."
+      ],
+      "namesAndDescriptions": [
+        {
+          "kind": "aria-label",
+          "text": "Orchestrator controls"
+        },
+        {
+          "kind": "aria-label",
+          "text": "Scheduling policy"
+        }
+      ]
+    },
+    {
+      "component": "ControlPanel",
+      "source": "frontend/src/components/ControlPanel.jsx",
+      "route": "/#console",
+      "state": "generating",
+      "textNodes": [
+        "Control panel",
+        "Operate the orchestrator",
+        "Demo Mode - generate 10 and run",
+        "1",
+        "Workload generator",
+        "Number of jobs",
+        "10 jobs",
+        "25 jobs",
+        "50 jobs",
+        "100 jobs",
+        "Arrival pattern",
+        "Immediate - all jobs ready at once",
+        "Light - 20-40s apart",
+        "Medium - 8-16s apart",
+        "Heavy - 2-6s apart",
+        "Constant - every 10s",
+        "Burst - groups of 5, 30s apart",
+        "Increasing - ramping up",
+        "Decreasing - ramping down",
+        "Periodic - repeating profile",
+        "Workload type",
+        "Sleep - short pauses, easy to watch",
+        "Mixed compute - CPU, matrix, sort, data",
+        "CPU - bounded calculations",
+        "Sorting - small number arrays",
+        "Data - small record sets",
+        "Matrix - small matrix products",
+        "Generated jobs use 64-256 MiB and short, bounded workloads. Resources are sized automatically.",
+        "Reproducibility",
+        "Deterministic seed",
+        "The same seed and settings reproduce job specifications and workload checksums. Timing can vary.",
+        "Generating…",
+        "2",
+        "Scheduling policy",
+        "Policy",
+        "FCFS - first come, first served",
+        "SJF - shortest job first",
+        "Priority - highest priority, with aging",
+        "Round Robin - order by scheduling rounds",
+        "3",
+        "Placement strategy",
+        "Strategy",
+        "First Fit - first worker that fits",
+        "Least Loaded - lowest current load",
+        "Resource-Aware - best balanced fit",
+        "Choose how jobs are ordered and which worker receives each job. The backend schedules and reserves capacity.",
+        "4",
+        "Run the orchestrator",
+        "Run Orchestrator",
+        "Pause stops new run requests. Containers already running continue.",
+        "Kill all workloads",
+        "Cleanup",
+        "Clear generated workload",
+        "Removes generated jobs that have not started scheduling, including future arrivals.",
+        "Clear finished jobs",
+        "Removes completed, failed, interrupted, and cancelled jobs. Pause the orchestrator before cleanup."
+      ],
+      "namesAndDescriptions": [
+        {
+          "kind": "aria-label",
+          "text": "Orchestrator controls"
+        },
+        {
+          "kind": "aria-label",
+          "text": "Scheduling policy"
+        }
+      ]
+    },
+    {
+      "component": "ControlPanel",
+      "source": "frontend/src/components/ControlPanel.jsx",
+      "route": "/#console",
+      "state": "stopping",
+      "textNodes": [
+        "Control panel",
+        "Operate the orchestrator",
+        "Demo Mode - generate 10 and run",
+        "1",
+        "Workload generator",
+        "Number of jobs",
+        "10 jobs",
+        "25 jobs",
+        "50 jobs",
+        "100 jobs",
+        "Arrival pattern",
+        "Immediate - all jobs ready at once",
+        "Light - 20-40s apart",
+        "Medium - 8-16s apart",
+        "Heavy - 2-6s apart",
+        "Constant - every 10s",
+        "Burst - groups of 5, 30s apart",
+        "Increasing - ramping up",
+        "Decreasing - ramping down",
+        "Periodic - repeating profile",
+        "Workload type",
+        "Sleep - short pauses, easy to watch",
+        "Mixed compute - CPU, matrix, sort, data",
+        "CPU - bounded calculations",
+        "Sorting - small number arrays",
+        "Data - small record sets",
+        "Matrix - small matrix products",
+        "Generated jobs use 64-256 MiB and short, bounded workloads. Resources are sized automatically.",
+        "Reproducibility",
+        "Deterministic seed",
+        "The same seed and settings reproduce job specifications and workload checksums. Timing can vary.",
+        "Generate Workload",
+        "2",
+        "Scheduling policy",
+        "Policy",
+        "FCFS - first come, first served",
+        "SJF - shortest job first",
+        "Priority - highest priority, with aging",
+        "Round Robin - order by scheduling rounds",
+        "3",
+        "Placement strategy",
+        "Strategy",
+        "First Fit - first worker that fits",
+        "Least Loaded - lowest current load",
+        "Resource-Aware - best balanced fit",
+        "Choose how jobs are ordered and which worker receives each job. The backend schedules and reserves capacity.",
+        "4",
+        "Run the orchestrator",
+        "Run Orchestrator",
+        "Pause stops new run requests. Containers already running continue.",
+        "Stopping workloads…",
+        "Cleanup",
+        "Clear generated workload",
+        "Removes generated jobs that have not started scheduling, including future arrivals.",
+        "Clear finished jobs",
+        "Removes completed, failed, interrupted, and cancelled jobs. Pause the orchestrator before cleanup."
+      ],
+      "namesAndDescriptions": [
+        {
+          "kind": "aria-label",
+          "text": "Orchestrator controls"
+        },
+        {
+          "kind": "aria-label",
+          "text": "Scheduling policy"
+        }
+      ]
+    },
+    {
+      "component": "ControlPanel",
+      "source": "frontend/src/components/ControlPanel.jsx",
+      "route": "/#console",
+      "state": "clearing generated",
+      "textNodes": [
+        "Control panel",
+        "Operate the orchestrator",
+        "Demo Mode - generate 10 and run",
+        "1",
+        "Workload generator",
+        "Number of jobs",
+        "10 jobs",
+        "25 jobs",
+        "50 jobs",
+        "100 jobs",
+        "Arrival pattern",
+        "Immediate - all jobs ready at once",
+        "Light - 20-40s apart",
+        "Medium - 8-16s apart",
+        "Heavy - 2-6s apart",
+        "Constant - every 10s",
+        "Burst - groups of 5, 30s apart",
+        "Increasing - ramping up",
+        "Decreasing - ramping down",
+        "Periodic - repeating profile",
+        "Workload type",
+        "Sleep - short pauses, easy to watch",
+        "Mixed compute - CPU, matrix, sort, data",
+        "CPU - bounded calculations",
+        "Sorting - small number arrays",
+        "Data - small record sets",
+        "Matrix - small matrix products",
+        "Generated jobs use 64-256 MiB and short, bounded workloads. Resources are sized automatically.",
+        "Reproducibility",
+        "Deterministic seed",
+        "The same seed and settings reproduce job specifications and workload checksums. Timing can vary.",
+        "Generate Workload",
+        "2",
+        "Scheduling policy",
+        "Policy",
+        "FCFS - first come, first served",
+        "SJF - shortest job first",
+        "Priority - highest priority, with aging",
+        "Round Robin - order by scheduling rounds",
+        "3",
+        "Placement strategy",
+        "Strategy",
+        "First Fit - first worker that fits",
+        "Least Loaded - lowest current load",
+        "Resource-Aware - best balanced fit",
+        "Choose how jobs are ordered and which worker receives each job. The backend schedules and reserves capacity.",
+        "4",
+        "Run the orchestrator",
+        "Run Orchestrator",
+        "Pause stops new run requests. Containers already running continue.",
+        "Kill all workloads",
+        "Cleanup",
+        "Clearing…",
+        "Removes generated jobs that have not started scheduling, including future arrivals.",
+        "Clear finished jobs",
+        "Removes completed, failed, interrupted, and cancelled jobs. Pause the orchestrator before cleanup."
+      ],
+      "namesAndDescriptions": [
+        {
+          "kind": "aria-label",
+          "text": "Orchestrator controls"
+        },
+        {
+          "kind": "aria-label",
+          "text": "Scheduling policy"
+        }
+      ]
+    },
+    {
+      "component": "ControlPanel",
+      "source": "frontend/src/components/ControlPanel.jsx",
+      "route": "/#console",
+      "state": "clearing finished",
+      "textNodes": [
+        "Control panel",
+        "Operate the orchestrator",
+        "Demo Mode - generate 10 and run",
+        "1",
+        "Workload generator",
+        "Number of jobs",
+        "10 jobs",
+        "25 jobs",
+        "50 jobs",
+        "100 jobs",
+        "Arrival pattern",
+        "Immediate - all jobs ready at once",
+        "Light - 20-40s apart",
+        "Medium - 8-16s apart",
+        "Heavy - 2-6s apart",
+        "Constant - every 10s",
+        "Burst - groups of 5, 30s apart",
+        "Increasing - ramping up",
+        "Decreasing - ramping down",
+        "Periodic - repeating profile",
+        "Workload type",
+        "Sleep - short pauses, easy to watch",
+        "Mixed compute - CPU, matrix, sort, data",
+        "CPU - bounded calculations",
+        "Sorting - small number arrays",
+        "Data - small record sets",
+        "Matrix - small matrix products",
+        "Generated jobs use 64-256 MiB and short, bounded workloads. Resources are sized automatically.",
+        "Reproducibility",
+        "Deterministic seed",
+        "The same seed and settings reproduce job specifications and workload checksums. Timing can vary.",
+        "Generate Workload",
+        "2",
+        "Scheduling policy",
+        "Policy",
+        "FCFS - first come, first served",
+        "SJF - shortest job first",
+        "Priority - highest priority, with aging",
+        "Round Robin - order by scheduling rounds",
+        "3",
+        "Placement strategy",
+        "Strategy",
+        "First Fit - first worker that fits",
+        "Least Loaded - lowest current load",
+        "Resource-Aware - best balanced fit",
+        "Choose how jobs are ordered and which worker receives each job. The backend schedules and reserves capacity.",
+        "4",
+        "Run the orchestrator",
+        "Run Orchestrator",
+        "Pause stops new run requests. Containers already running continue.",
+        "Kill all workloads",
+        "Cleanup",
+        "Clear generated workload",
+        "Removes generated jobs that have not started scheduling, including future arrivals.",
+        "Clearing…",
+        "Removes completed, failed, interrupted, and cancelled jobs. Pause the orchestrator before cleanup."
+      ],
+      "namesAndDescriptions": [
+        {
+          "kind": "aria-label",
+          "text": "Orchestrator controls"
+        },
+        {
+          "kind": "aria-label",
+          "text": "Scheduling policy"
+        }
+      ]
+    },
+    {
+      "component": "JobDetail",
+      "source": "frontend/src/components/JobDetail.jsx",
+      "route": "/#job-queue",
+      "state": "unselected",
+      "textNodes": [
+        "Job detail",
+        "Nothing selected",
+        "Pick a job from the queue to see exactly what happened to it."
+      ],
+      "namesAndDescriptions": [
+        {
+          "kind": "aria-label",
+          "text": "Job detail"
+        }
+      ]
+    },
+    {
+      "component": "JobDetail",
+      "source": "frontend/src/components/JobDetail.jsx",
+      "route": "/#job-queue",
+      "state": "queued",
+      "textNodes": [
+        "Job detail",
+        "Fixture sleep job",
+        "QUEUED",
+        "Workload",
+        "sleep · size 4",
+        "Requested",
+        "250m CPU · 128 MiB",
+        "Priority / estimate",
+        "5 · 4s",
+        "Scheduled by",
+        "not scheduled yet",
+        "Placed by",
+        "not placed yet",
+        "Pipeline stage",
+        "QUEUE",
+        "Advance one stage at a time (for demonstration)",
+        "Place with LEAST_LOADED",
+        "Reserve resources",
+        "Start container",
+        "Release resources",
+        "Cancel job",
+        "These call the same stage endpoints the orchestrator uses. Buttons are disabled when the job is not in a state that allows the action."
+      ],
+      "namesAndDescriptions": [
+        {
+          "kind": "aria-label",
+          "text": "Job detail"
+        }
+      ]
+    },
+    {
+      "component": "JobDetail",
+      "source": "frontend/src/components/JobDetail.jsx",
+      "route": "/#job-queue",
+      "state": "scheduled without worker",
+      "textNodes": [
+        "Job detail",
+        "Fixture sleep job",
+        "SCHEDULED",
+        "Workload",
+        "sleep · size 4",
+        "Requested",
+        "250m CPU · 128 MiB",
+        "Priority / estimate",
+        "5 · 4s",
+        "Scheduled by",
+        "FCFS",
+        "Placed by",
+        "not placed yet",
+        "Pipeline stage",
+        "SCHEDULER",
+        "Advance one stage at a time (for demonstration)",
+        "Place with LEAST_LOADED",
+        "Reserve resources",
+        "Start container",
+        "Release resources",
+        "Cancel job",
+        "These call the same stage endpoints the orchestrator uses. Buttons are disabled when the job is not in a state that allows the action."
+      ],
+      "namesAndDescriptions": [
+        {
+          "kind": "aria-label",
+          "text": "Job detail"
+        }
+      ]
+    },
+    {
+      "component": "JobDetail",
+      "source": "frontend/src/components/JobDetail.jsx",
+      "route": "/#job-queue",
+      "state": "reserved",
+      "textNodes": [
+        "Job detail",
+        "Fixture sleep job",
+        "SCHEDULED",
+        "Workload",
+        "sleep · size 4",
+        "Requested",
+        "250m CPU · 128 MiB",
+        "Priority / estimate",
+        "5 · 4s",
+        "Scheduled by",
+        "not scheduled yet",
+        "Placed by",
+        "LEAST_LOADED → worker-1",
+        "Pipeline stage",
+        "RESERVATION",
+        "Resource reserved",
+        "worker-1 · 250m CPU / 128 MiB",
+        "Committed by a MySQL transaction holding a row lock on the worker, so a concurrent job cannot claim the same capacity.",
+        "Advance one stage at a time (for demonstration)",
+        "Place with LEAST_LOADED",
+        "Reserve resources",
+        "Start container",
+        "Release resources",
+        "Cancel job",
+        "These call the same stage endpoints the orchestrator uses. Buttons are disabled when the job is not in a state that allows the action."
+      ],
+      "namesAndDescriptions": [
+        {
+          "kind": "aria-label",
+          "text": "Job detail"
+        }
+      ]
+    },
+    {
+      "component": "JobDetail",
+      "source": "frontend/src/components/JobDetail.jsx",
+      "route": "/#job-queue",
+      "state": "running",
+      "textNodes": [
+        "Job detail",
+        "Fixture sleep job",
+        "RUNNING",
+        "Workload",
+        "sleep · size 4",
+        "Requested",
+        "250m CPU · 128 MiB",
+        "Priority / estimate",
+        "5 · 4s",
+        "Scheduled by",
+        "not scheduled yet",
+        "Placed by",
+        "not placed yet",
+        "Pipeline stage",
+        "EXECUTION",
+        "Resource reserved",
+        "worker-1 · 250m CPU / 128 MiB",
+        "Committed by a MySQL transaction holding a row lock on the worker, so a concurrent job cannot claim the same capacity.",
+        "Docker execution · attempt 1",
+        "aaaaaaaaaaaa · RUNNING",
+        "Started 5:30:00 PM · 4s elapsed",
+        "Advance one stage at a time (for demonstration)",
+        "Place with LEAST_LOADED",
+        "Reserve resources",
+        "Start container",
+        "Release resources",
+        "Cancel job",
+        "These call the same stage endpoints the orchestrator uses. Buttons are disabled when the job is not in a state that allows the action."
+      ],
+      "namesAndDescriptions": [
+        {
+          "kind": "aria-label",
+          "text": "Job detail"
+        }
+      ]
+    },
+    {
+      "component": "JobDetail",
+      "source": "frontend/src/components/JobDetail.jsx",
+      "route": "/#job-queue",
+      "state": "completed",
+      "textNodes": [
+        "Job detail",
+        "Fixture sleep job",
+        "COMPLETED",
+        "Workload",
+        "sleep · size 4",
+        "Requested",
+        "250m CPU · 128 MiB",
+        "Priority / estimate",
+        "5 · 4s",
+        "Scheduled by",
+        "not scheduled yet",
+        "Placed by",
+        "not placed yet",
+        "Pipeline stage",
+        "COMPLETED",
+        "Docker execution · attempt 1",
+        "aaaaaaaaaaaa · COMPLETED",
+        "Started 5:30:00 PM · 4s elapsed · exit 0",
+        "Recorded result",
+        "checksum abcdef01",
+        "0 operations · effective size 4 · runner 4000ms",
+        "The same seed reproduces this checksum exactly, which is how runs are compared.",
+        "Advance one stage at a time (for demonstration)",
+        "Place with LEAST_LOADED",
+        "Reserve resources",
+        "Start container",
+        "Release resources",
+        "Cancel job",
+        "These call the same stage endpoints the orchestrator uses. Buttons are disabled when the job is not in a state that allows the action."
+      ],
+      "namesAndDescriptions": [
+        {
+          "kind": "aria-label",
+          "text": "Job detail"
+        }
+      ]
+    },
+    {
+      "component": "JobDetail",
+      "source": "frontend/src/components/JobDetail.jsx",
+      "route": "/#job-queue",
+      "state": "failed",
+      "textNodes": [
+        "Job detail",
+        "Fixture sleep job",
+        "FAILED",
+        "Workload",
+        "sleep · size 4",
+        "Requested",
+        "250m CPU · 128 MiB",
+        "Priority / estimate",
+        "5 · 4s",
+        "Scheduled by",
+        "not scheduled yet",
+        "Placed by",
+        "not placed yet",
+        "Pipeline stage",
+        "TERMINATED",
+        "Docker execution · attempt 1",
+        "aaaaaaaaaaaa · FAILED",
+        "Started 5:30:00 PM · 4s elapsed · exit 1",
+        "Fixture container exited with code 1",
+        "Advance one stage at a time (for demonstration)",
+        "Place with LEAST_LOADED",
+        "Reserve resources",
+        "Start container",
+        "Release resources",
+        "Cancel job",
+        "These call the same stage endpoints the orchestrator uses. Buttons are disabled when the job is not in a state that allows the action."
+      ],
+      "namesAndDescriptions": [
+        {
+          "kind": "aria-label",
+          "text": "Job detail"
+        }
+      ]
+    },
+    {
+      "component": "JobQueue",
+      "source": "frontend/src/components/JobQueue.jsx",
+      "route": "/#job-queue",
+      "state": "empty",
+      "textNodes": [
+        "Live job queue",
+        "0 job(s) in the database",
+        "Latest updates first",
+        "All",
+        "QUEUED",
+        "SCHEDULED",
+        "RUNNING",
+        "COMPLETED",
+        "FAILED",
+        "INTERRUPTED",
+        "No jobs yet. Generate a workload to fill the queue."
+      ],
+      "namesAndDescriptions": [
+        {
+          "kind": "aria-label",
+          "text": "Job queue"
+        },
+        {
+          "kind": "aria-label",
+          "text": "Filter jobs by status"
+        }
+      ]
+    },
+    {
+      "component": "JobQueue",
+      "source": "frontend/src/components/JobQueue.jsx",
+      "route": "/#job-queue",
+      "state": "populated",
+      "textNodes": [
+        "Live job queue",
+        "1 job(s) in the database",
+        "Latest updates first",
+        "All",
+        "QUEUED",
+        "SCHEDULED",
+        "RUNNING",
+        "COMPLETED",
+        "FAILED",
+        "INTERRUPTED",
+        "Job",
+        "Type",
+        "CPU (m)",
+        "Memory",
+        "Prio",
+        "Est.",
+        "Status",
+        "Worker",
+        "Container",
+        "Fixture sleep job",
+        "sleep",
+        "250m",
+        "128 MiB",
+        "5",
+        "4s",
+        "QUEUED",
+        "-",
+        "-"
+      ],
+      "namesAndDescriptions": [
+        {
+          "kind": "aria-label",
+          "text": "Job queue"
+        },
+        {
+          "kind": "aria-label",
+          "text": "Filter jobs by status"
+        },
+        {
+          "kind": "title",
+          "text": "Millicores: 1000m = 1 CPU core"
+        }
+      ]
+    },
+    {
+      "component": "JobQueue",
+      "source": "frontend/src/components/JobQueue.jsx",
+      "route": "/#job-queue",
+      "state": "filtered zero",
+      "textNodes": [
+        "Live job queue",
+        "1 job(s) in the database",
+        "Latest updates first",
+        "All",
+        "QUEUED",
+        "SCHEDULED",
+        "RUNNING",
+        "COMPLETED",
+        "FAILED",
+        "INTERRUPTED",
+        "No jobs match this filter."
+      ],
+      "namesAndDescriptions": [
+        {
+          "kind": "aria-label",
+          "text": "Job queue"
+        },
+        {
+          "kind": "aria-label",
+          "text": "Filter jobs by status"
+        }
+      ]
+    },
+    {
+      "component": "JobQueue",
+      "source": "frontend/src/components/JobQueue.jsx",
+      "route": "/#job-queue",
+      "state": "limited recent jobs",
+      "textNodes": [
+        "Live job queue",
+        "200 job(s) in the database",
+        "Latest updates first · showing 1",
+        "All",
+        "QUEUED",
+        "SCHEDULED",
+        "RUNNING",
+        "COMPLETED",
+        "FAILED",
+        "INTERRUPTED",
+        "Job",
+        "Type",
+        "CPU (m)",
+        "Memory",
+        "Prio",
+        "Est.",
+        "Status",
+        "Worker",
+        "Container",
+        "Fixture sleep job",
+        "sleep",
+        "250m",
+        "128 MiB",
+        "5",
+        "4s",
+        "QUEUED",
+        "-",
+        "-"
+      ],
+      "namesAndDescriptions": [
+        {
+          "kind": "aria-label",
+          "text": "Job queue"
+        },
+        {
+          "kind": "aria-label",
+          "text": "Filter jobs by status"
+        },
+        {
+          "kind": "title",
+          "text": "Millicores: 1000m = 1 CPU core"
+        }
+      ]
+    },
+    {
+      "component": "WorkerGrid",
+      "source": "frontend/src/components/WorkerGrid.jsx",
+      "route": "/#console",
+      "state": "idle",
+      "textNodes": [
+        "Logical workers",
+        "Capacity and running containers",
+        "Workers are scheduling slots on the same computer. Rings show reserved limits, not actual RAM usage. Jobs run in Docker containers.",
+        "worker-1",
+        "IDLE",
+        "0%",
+        "idle",
+        "worker-1 capacity: CPU 0% reserved, memory 0% reserved.",
+        "CPU reserved",
+        "0 / 500 m",
+        "Memory reserved",
+        "0 / 512 MiB",
+        "No container running"
+      ],
+      "namesAndDescriptions": [
+        {
+          "kind": "aria-label",
+          "text": "Workers"
+        },
+        {
+          "kind": "title",
+          "text": "worker-1 capacity: CPU 0% reserved, memory 0% reserved. Center shows the higher percentage."
+        },
+        {
+          "kind": "title",
+          "text": "Millicores: 1000m = 1 CPU core"
+        }
+      ]
+    },
+    {
+      "component": "WorkerGrid",
+      "source": "frontend/src/components/WorkerGrid.jsx",
+      "route": "/#console",
+      "state": "busy",
+      "textNodes": [
+        "Logical workers",
+        "Capacity and running containers",
+        "Workers are scheduling slots on the same computer. Rings show reserved limits, not actual RAM usage. Jobs run in Docker containers.",
+        "worker-1",
+        "BUSY",
+        "50%",
+        "reserved",
+        "worker-1 capacity: CPU 50% reserved, memory 25% reserved.",
+        "CPU reserved",
+        "250 / 500 m",
+        "Memory reserved",
+        "128 / 512 MiB",
+        "Fixture sleep job · aaaaaaaaaaaa"
+      ],
+      "namesAndDescriptions": [
+        {
+          "kind": "aria-label",
+          "text": "Workers"
+        },
+        {
+          "kind": "title",
+          "text": "worker-1 capacity: CPU 50% reserved, memory 25% reserved. Center shows the higher percentage."
+        },
+        {
+          "kind": "title",
+          "text": "Millicores: 1000m = 1 CPU core"
+        }
+      ]
+    },
+    {
+      "component": "PipelineView",
+      "source": "frontend/src/components/PipelineView.jsx",
+      "route": "/#pipeline",
+      "state": "empty",
+      "textNodes": [
+        "Pipeline",
+        "Job pipeline",
+        "Select a job below to trace it.",
+        "1",
+        "Job Queue",
+        "0",
+        "Persisted in MySQL",
+        "2",
+        "Scheduler",
+        "0",
+        "Which job runs next",
+        "3",
+        "Placement",
+        "0",
+        "Which worker runs it",
+        "4",
+        "Reservation",
+        "0",
+        "Transaction + row lock",
+        "5",
+        "Docker Execution",
+        "0",
+        "Container under limits",
+        "6",
+        "Completed",
+        "0",
+        "Result stored, capacity freed"
+      ],
+      "namesAndDescriptions": [
+        {
+          "kind": "aria-label",
+          "text": "Pipeline"
+        }
+      ]
+    },
+    {
+      "component": "PipelineView",
+      "source": "frontend/src/components/PipelineView.jsx",
+      "route": "/#pipeline",
+      "state": "selected running",
+      "textNodes": [
+        "Pipeline",
+        "Job pipeline",
+        "Highlighting",
+        "Fixture sleep job",
+        "1",
+        "Job Queue",
+        "0",
+        "Persisted in MySQL",
+        "2",
+        "Scheduler",
+        "0",
+        "Which job runs next",
+        "3",
+        "Placement",
+        "0",
+        "Which worker runs it",
+        "4",
+        "Reservation",
+        "0",
+        "Transaction + row lock",
+        "5",
+        "Docker Execution",
+        "1",
+        "Container under limits",
+        "6",
+        "Completed",
+        "0",
+        "Result stored, capacity freed"
+      ],
+      "namesAndDescriptions": [
+        {
+          "kind": "aria-label",
+          "text": "Pipeline"
+        }
+      ]
+    },
+    {
+      "component": "PipelineView",
+      "source": "frontend/src/components/PipelineView.jsx",
+      "route": "/#pipeline",
+      "state": "terminated",
+      "textNodes": [
+        "Pipeline",
+        "Job pipeline",
+        "Highlighting",
+        "Fixture sleep job",
+        "- ended early",
+        "1",
+        "Job Queue",
+        "0",
+        "Persisted in MySQL",
+        "2",
+        "Scheduler",
+        "0",
+        "Which job runs next",
+        "3",
+        "Placement",
+        "0",
+        "Which worker runs it",
+        "4",
+        "Reservation",
+        "0",
+        "Transaction + row lock",
+        "5",
+        "Docker Execution",
+        "0",
+        "Container under limits",
+        "6",
+        "Completed",
+        "0",
+        "Result stored, capacity freed",
+        "1 job(s) ended as failed, interrupted, or cancelled."
+      ],
+      "namesAndDescriptions": [
+        {
+          "kind": "aria-label",
+          "text": "Pipeline"
+        }
+      ]
+    },
+    {
+      "component": "ActivityLog",
+      "source": "frontend/src/components/ActivityLog.jsx",
+      "route": "/#console",
+      "state": "empty",
+      "textNodes": [
+        "Activity",
+        "What the backend reported",
+        "Clear",
+        "No actions yet."
+      ],
+      "namesAndDescriptions": [
+        {
+          "kind": "aria-label",
+          "text": "Activity log"
+        }
+      ]
+    },
+    {
+      "component": "ActivityLog",
+      "source": "frontend/src/components/ActivityLog.jsx",
+      "route": "/#console",
+      "state": "backend action reported",
+      "textNodes": [
+        "Activity",
+        "What the backend reported",
+        "Clear",
+        "17:30:00",
+        "Fixture job · EXECUTION",
+        "Fixture: container started"
+      ],
+      "namesAndDescriptions": [
+        {
+          "kind": "aria-label",
+          "text": "Activity log"
+        }
+      ]
+    },
+    {
+      "component": "ActivityLog",
+      "source": "frontend/src/components/ActivityLog.jsx",
+      "route": "/#console",
+      "state": "error",
+      "textNodes": [
+        "Activity",
+        "What the backend reported",
+        "Clear",
+        "17:30:01",
+        "Fixture stopped",
+        "Fixture: Docker engine unavailable"
+      ],
+      "namesAndDescriptions": [
+        {
+          "kind": "aria-label",
+          "text": "Activity log"
+        }
+      ]
+    },
+    {
+      "component": "MonitoringView",
+      "source": "frontend/src/MonitoringPanel.jsx",
+      "route": "/#monitoring",
+      "state": "loading",
+      "textNodes": [
+        "Live monitoring",
+        "Cluster state",
+        "Monitoring tools",
+        "Live state updates automatically. Refresh reads it now; Save snapshot records worker values for the chart.",
+        "Refresh now",
+        "Save snapshot",
+        "Loading metrics…"
+      ],
+      "namesAndDescriptions": [
+        {
+          "kind": "aria-label",
+          "text": "Live monitoring"
+        },
+        {
+          "kind": "title",
+          "text": "Read the latest monitoring values without writing to the database"
+        },
+        {
+          "kind": "title",
+          "text": "Save one CPU and memory reservation snapshot per worker"
+        }
+      ]
+    },
+    {
+      "component": "MonitoringView",
+      "source": "frontend/src/MonitoringPanel.jsx",
+      "route": "/#monitoring",
+      "state": "initial read failed",
+      "textNodes": [
+        "Live monitoring",
+        "Cluster state",
+        "Monitoring tools",
+        "Live state updates automatically. Refresh reads it now; Save snapshot records worker values for the chart.",
+        "Refresh now",
+        "Save snapshot",
+        "Live state: Fixture request timed out",
+        "Loading metrics…"
+      ],
+      "namesAndDescriptions": [
+        {
+          "kind": "aria-label",
+          "text": "Live monitoring"
+        },
+        {
+          "kind": "title",
+          "text": "Read the latest monitoring values without writing to the database"
+        },
+        {
+          "kind": "title",
+          "text": "Save one CPU and memory reservation snapshot per worker"
+        }
+      ]
+    },
+    {
+      "component": "MonitoringView",
+      "source": "frontend/src/MonitoringPanel.jsx",
+      "route": "/#monitoring",
+      "state": "overview ready, job metrics loading",
+      "textNodes": [
+        "Live monitoring",
+        "Cluster state",
+        "Monitoring tools",
+        "Live state updates automatically. Refresh reads it now; Save snapshot records worker values for the chart.",
+        "Refresh now",
+        "Save snapshot",
+        "Reserved capacity",
+        "0%",
+        "reserved",
+        "Cluster capacity: CPU 0% reserved, memory 0% reserved.",
+        "CPU (m)",
+        "0 / 500 m",
+        "Memory",
+        "0 / 512 MiB",
+        "Queue",
+        "Waiting to run",
+        "0",
+        "Running",
+        "0",
+        "Finished",
+        "0",
+        "Active reservations",
+        "0",
+        "No jobs yet",
+        "Throughput (60 min)",
+        "Finished",
+        "—",
+        "Per minute",
+        "—",
+        "Success rate",
+        "—",
+        "Loading job metrics…",
+        "Recorded CPU and memory reservations",
+        "0 saved worker snapshots",
+        "Loading recorded samples…",
+        "Workers",
+        "Worker",
+        "Status",
+        "CPU (m)",
+        "Memory",
+        "Reserved",
+        "Running",
+        "Completed",
+        "Failed",
+        "Lifecycle timings",
+        "Stage",
+        "n",
+        "avg",
+        "p95",
+        "max",
+        "Running now",
+        "No containers running.",
+        "Refreshing every 2s · last read 5:30:00 PM"
+      ],
+      "namesAndDescriptions": [
+        {
+          "kind": "aria-label",
+          "text": "Live monitoring"
+        },
+        {
+          "kind": "title",
+          "text": "Read the latest monitoring values without writing to the database"
+        },
+        {
+          "kind": "title",
+          "text": "Save one CPU and memory reservation snapshot per worker"
+        },
+        {
+          "kind": "title",
+          "text": "Cluster capacity: CPU 0% reserved, memory 0% reserved. Center shows the higher percentage."
+        },
+        {
+          "kind": "title",
+          "text": "Millicores: 1000m = 1 CPU core"
+        },
+        {
+          "kind": "title",
+          "text": "Saved worker snapshots draw this chart. History is pruned according to the configured retention period."
+        },
+        {
+          "kind": "title",
+          "text": "Millicores: 1000m = 1 CPU core"
+        }
+      ]
+    },
+    {
+      "component": "MonitoringView",
+      "source": "frontend/src/MonitoringPanel.jsx",
+      "route": "/#monitoring",
+      "state": "overview ready, job metrics failed",
+      "textNodes": [
+        "Live monitoring",
+        "Cluster state",
+        "Monitoring tools",
+        "Live state updates automatically. Refresh reads it now; Save snapshot records worker values for the chart.",
+        "Refresh now",
+        "Save snapshot",
+        "Job timings: Fixture request timed out",
+        "Reserved capacity",
+        "0%",
+        "reserved",
+        "Cluster capacity: CPU 0% reserved, memory 0% reserved.",
+        "CPU (m)",
+        "0 / 500 m",
+        "Memory",
+        "0 / 512 MiB",
+        "Queue",
+        "Waiting to run",
+        "0",
+        "Running",
+        "0",
+        "Finished",
+        "0",
+        "Active reservations",
+        "0",
+        "No jobs yet",
+        "Throughput (60 min)",
+        "Finished",
+        "—",
+        "Per minute",
+        "—",
+        "Success rate",
+        "—",
+        "Job metrics unavailable. Use Refresh now in Monitoring tools to retry.",
+        "Recorded CPU and memory reservations",
+        "0 saved worker snapshots",
+        "Loading recorded samples…",
+        "Workers",
+        "Worker",
+        "Status",
+        "CPU (m)",
+        "Memory",
+        "Reserved",
+        "Running",
+        "Completed",
+        "Failed",
+        "Lifecycle timings",
+        "Stage",
+        "n",
+        "avg",
+        "p95",
+        "max",
+        "Running now",
+        "No containers running.",
+        "Refreshing every 2s · last read 5:30:00 PM"
+      ],
+      "namesAndDescriptions": [
+        {
+          "kind": "aria-label",
+          "text": "Live monitoring"
+        },
+        {
+          "kind": "title",
+          "text": "Read the latest monitoring values without writing to the database"
+        },
+        {
+          "kind": "title",
+          "text": "Save one CPU and memory reservation snapshot per worker"
+        },
+        {
+          "kind": "title",
+          "text": "Cluster capacity: CPU 0% reserved, memory 0% reserved. Center shows the higher percentage."
+        },
+        {
+          "kind": "title",
+          "text": "Millicores: 1000m = 1 CPU core"
+        },
+        {
+          "kind": "title",
+          "text": "Saved worker snapshots draw this chart. History is pruned according to the configured retention period."
+        },
+        {
+          "kind": "title",
+          "text": "Millicores: 1000m = 1 CPU core"
+        }
+      ]
+    },
+    {
+      "component": "MonitoringView",
+      "source": "frontend/src/MonitoringPanel.jsx",
+      "route": "/#monitoring",
+      "state": "empty samples",
+      "textNodes": [
+        "Live monitoring",
+        "Cluster state",
+        "Monitoring tools",
+        "Live state updates automatically. Refresh reads it now; Save snapshot records worker values for the chart.",
+        "Refresh now",
+        "Save snapshot",
+        "Reserved capacity",
+        "0%",
+        "reserved",
+        "Cluster capacity: CPU 0% reserved, memory 0% reserved.",
+        "CPU (m)",
+        "0 / 500 m",
+        "Memory",
+        "0 / 512 MiB",
+        "Queue",
+        "Waiting to run",
+        "0",
+        "Running",
+        "0",
+        "Finished",
+        "0",
+        "Active reservations",
+        "0",
+        "No jobs yet",
+        "Throughput (60 min)",
+        "Finished",
+        "0",
+        "Per minute",
+        "0",
+        "Success rate",
+        "—",
+        "Recorded CPU and memory reservations",
+        "0 chart points in the last 60 min · 0 saved worker snapshots",
+        "No recorded samples in this window. Use Save snapshot in Monitoring tools to record one now.",
+        "Workers",
+        "Worker",
+        "Status",
+        "CPU (m)",
+        "Memory",
+        "Reserved",
+        "Running",
+        "Completed",
+        "Failed",
+        "Lifecycle timings",
+        "Stage",
+        "n",
+        "avg",
+        "p95",
+        "max",
+        "Execution",
+        "0",
+        "-",
+        "-",
+        "-",
+        "Running now",
+        "No containers running.",
+        "Refreshing every 2s · last read 5:30:00 PM"
+      ],
+      "namesAndDescriptions": [
+        {
+          "kind": "aria-label",
+          "text": "Live monitoring"
+        },
+        {
+          "kind": "title",
+          "text": "Read the latest monitoring values without writing to the database"
+        },
+        {
+          "kind": "title",
+          "text": "Save one CPU and memory reservation snapshot per worker"
+        },
+        {
+          "kind": "title",
+          "text": "Cluster capacity: CPU 0% reserved, memory 0% reserved. Center shows the higher percentage."
+        },
+        {
+          "kind": "title",
+          "text": "Millicores: 1000m = 1 CPU core"
+        },
+        {
+          "kind": "title",
+          "text": "Saved worker snapshots draw this chart. History is pruned according to the configured retention period."
+        },
+        {
+          "kind": "title",
+          "text": "Millicores: 1000m = 1 CPU core"
+        }
+      ]
+    },
+    {
+      "component": "MonitoringView",
+      "source": "frontend/src/MonitoringPanel.jsx",
+      "route": "/#monitoring",
+      "state": "one sample",
+      "textNodes": [
+        "Live monitoring",
+        "Cluster state",
+        "Monitoring tools",
+        "Live state updates automatically. Refresh reads it now; Save snapshot records worker values for the chart.",
+        "Refresh now",
+        "Save snapshot",
+        "Reserved capacity",
+        "0%",
+        "reserved",
+        "Cluster capacity: CPU 0% reserved, memory 0% reserved.",
+        "CPU (m)",
+        "0 / 500 m",
+        "Memory",
+        "0 / 512 MiB",
+        "Queue",
+        "Waiting to run",
+        "0",
+        "Running",
+        "0",
+        "Finished",
+        "0",
+        "Active reservations",
+        "0",
+        "No jobs yet",
+        "Throughput (60 min)",
+        "Finished",
+        "0",
+        "Per minute",
+        "0",
+        "Success rate",
+        "—",
+        "Recorded CPU and memory reservations",
+        "1 chart points in the last 60 min · 0 saved worker snapshots",
+        "100%",
+        "75%",
+        "50%",
+        "25%",
+        "0%",
+        "Oct 11, 04:30:00 PM",
+        "Oct 11, 04:30:00 PM",
+        "CPU",
+        "Memory",
+        "Lines connect recorded samples. Time between samples is unmeasured. Values show reserved limits, not actual host usage.",
+        "Sample values",
+        "Recorded reservations as percentages of worker capacity",
+        "Captured at",
+        "CPU reserved (%)",
+        "Memory reserved (%)",
+        "Oct 11, 04:30:00 PM",
+        "20%",
+        "10%",
+        "Workers",
+        "Worker",
+        "Status",
+        "CPU (m)",
+        "Memory",
+        "Reserved",
+        "Running",
+        "Completed",
+        "Failed",
+        "Lifecycle timings",
+        "Stage",
+        "n",
+        "avg",
+        "p95",
+        "max",
+        "Execution",
+        "0",
+        "-",
+        "-",
+        "-",
+        "Running now",
+        "No containers running.",
+        "Refreshing every 2s · last read 5:30:00 PM"
+      ],
+      "namesAndDescriptions": [
+        {
+          "kind": "aria-label",
+          "text": "Live monitoring"
+        },
+        {
+          "kind": "title",
+          "text": "Read the latest monitoring values without writing to the database"
+        },
+        {
+          "kind": "title",
+          "text": "Save one CPU and memory reservation snapshot per worker"
+        },
+        {
+          "kind": "title",
+          "text": "Cluster capacity: CPU 0% reserved, memory 0% reserved. Center shows the higher percentage."
+        },
+        {
+          "kind": "title",
+          "text": "Millicores: 1000m = 1 CPU core"
+        },
+        {
+          "kind": "title",
+          "text": "Saved worker snapshots draw this chart. History is pruned according to the configured retention period."
+        },
+        {
+          "kind": "aria-label",
+          "text": "Recorded CPU and memory reservations, from Oct 11, 04:30:00 PM to Oct 11, 04:30:00 PM, as percentages of worker capacity. Sample values are listed below."
+        },
+        {
+          "kind": "title",
+          "text": "Millicores: 1000m = 1 CPU core"
+        }
+      ]
+    },
+    {
+      "component": "MonitoringView",
+      "source": "frontend/src/MonitoringPanel.jsx",
+      "route": "/#monitoring",
+      "state": "uneven sample spacing",
+      "textNodes": [
+        "Live monitoring",
+        "Cluster state",
+        "Monitoring tools",
+        "Live state updates automatically. Refresh reads it now; Save snapshot records worker values for the chart.",
+        "Refresh now",
+        "Save snapshot",
+        "Reserved capacity",
+        "0%",
+        "reserved",
+        "Cluster capacity: CPU 0% reserved, memory 0% reserved.",
+        "CPU (m)",
+        "0 / 500 m",
+        "Memory",
+        "0 / 512 MiB",
+        "Queue",
+        "Waiting to run",
+        "0",
+        "Running",
+        "0",
+        "Finished",
+        "0",
+        "Active reservations",
+        "0",
+        "No jobs yet",
+        "Throughput (60 min)",
+        "Finished",
+        "0",
+        "Per minute",
+        "0",
+        "Success rate",
+        "—",
+        "Recorded CPU and memory reservations",
+        "3 chart points in the last 60 min · 0 saved worker snapshots",
+        "100%",
+        "75%",
+        "50%",
+        "25%",
+        "0%",
+        "Oct 11, 04:30:00 PM",
+        "Oct 11, 05:30:00 PM",
+        "CPU",
+        "Memory",
+        "Lines connect recorded samples. Time between samples is unmeasured. Values show reserved limits, not actual host usage.",
+        "Sample values",
+        "Recorded reservations as percentages of worker capacity",
+        "Captured at",
+        "CPU reserved (%)",
+        "Memory reserved (%)",
+        "Oct 11, 04:30:00 PM",
+        "20%",
+        "10%",
+        "Oct 11, 04:30:15 PM",
+        "50%",
+        "25%",
+        "Oct 11, 05:30:00 PM",
+        "10%",
+        "5%",
+        "Workers",
+        "Worker",
+        "Status",
+        "CPU (m)",
+        "Memory",
+        "Reserved",
+        "Running",
+        "Completed",
+        "Failed",
+        "Lifecycle timings",
+        "Stage",
+        "n",
+        "avg",
+        "p95",
+        "max",
+        "Execution",
+        "0",
+        "-",
+        "-",
+        "-",
+        "Running now",
+        "No containers running.",
+        "Refreshing every 2s · last read 5:30:00 PM"
+      ],
+      "namesAndDescriptions": [
+        {
+          "kind": "aria-label",
+          "text": "Live monitoring"
+        },
+        {
+          "kind": "title",
+          "text": "Read the latest monitoring values without writing to the database"
+        },
+        {
+          "kind": "title",
+          "text": "Save one CPU and memory reservation snapshot per worker"
+        },
+        {
+          "kind": "title",
+          "text": "Cluster capacity: CPU 0% reserved, memory 0% reserved. Center shows the higher percentage."
+        },
+        {
+          "kind": "title",
+          "text": "Millicores: 1000m = 1 CPU core"
+        },
+        {
+          "kind": "title",
+          "text": "Saved worker snapshots draw this chart. History is pruned according to the configured retention period."
+        },
+        {
+          "kind": "aria-label",
+          "text": "Recorded CPU and memory reservations, from Oct 11, 04:30:00 PM to Oct 11, 05:30:00 PM, as percentages of worker capacity. Sample values are listed below."
+        },
+        {
+          "kind": "title",
+          "text": "Millicores: 1000m = 1 CPU core"
+        }
+      ]
+    },
+    {
+      "component": "MonitoringView",
+      "source": "frontend/src/MonitoringPanel.jsx",
+      "route": "/#monitoring",
+      "state": "snapshot saving",
+      "textNodes": [
+        "Live monitoring",
+        "Cluster state",
+        "Monitoring tools",
+        "Live state updates automatically. Refresh reads it now; Save snapshot records worker values for the chart.",
+        "Refresh now",
+        "Saving…",
+        "Reserved capacity",
+        "0%",
+        "reserved",
+        "Cluster capacity: CPU 0% reserved, memory 0% reserved.",
+        "CPU (m)",
+        "0 / 500 m",
+        "Memory",
+        "0 / 512 MiB",
+        "Queue",
+        "Waiting to run",
+        "0",
+        "Running",
+        "0",
+        "Finished",
+        "0",
+        "Active reservations",
+        "0",
+        "No jobs yet",
+        "Throughput (60 min)",
+        "Finished",
+        "0",
+        "Per minute",
+        "0",
+        "Success rate",
+        "—",
+        "Recorded CPU and memory reservations",
+        "0 chart points in the last 60 min · 0 saved worker snapshots",
+        "No recorded samples in this window. Use Save snapshot in Monitoring tools to record one now.",
+        "Workers",
+        "Worker",
+        "Status",
+        "CPU (m)",
+        "Memory",
+        "Reserved",
+        "Running",
+        "Completed",
+        "Failed",
+        "Lifecycle timings",
+        "Stage",
+        "n",
+        "avg",
+        "p95",
+        "max",
+        "Execution",
+        "0",
+        "-",
+        "-",
+        "-",
+        "Running now",
+        "No containers running.",
+        "Refreshing every 2s · last read 5:30:00 PM"
+      ],
+      "namesAndDescriptions": [
+        {
+          "kind": "aria-label",
+          "text": "Live monitoring"
+        },
+        {
+          "kind": "title",
+          "text": "Read the latest monitoring values without writing to the database"
+        },
+        {
+          "kind": "title",
+          "text": "Save one CPU and memory reservation snapshot per worker"
+        },
+        {
+          "kind": "title",
+          "text": "Cluster capacity: CPU 0% reserved, memory 0% reserved. Center shows the higher percentage."
+        },
+        {
+          "kind": "title",
+          "text": "Millicores: 1000m = 1 CPU core"
+        },
+        {
+          "kind": "title",
+          "text": "Saved worker snapshots draw this chart. History is pruned according to the configured retention period."
+        },
+        {
+          "kind": "title",
+          "text": "Millicores: 1000m = 1 CPU core"
+        }
+      ]
+    }
+  ]
+}

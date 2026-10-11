@@ -1,0 +1,401 @@
+{
+  "viewports": [
+    {
+      "width": 320,
+      "documentWidth": 320,
+      "controlsOutsideViewport": []
+    },
+    {
+      "width": 375,
+      "documentWidth": 360,
+      "controlsOutsideViewport": []
+    },
+    {
+      "width": 768,
+      "documentWidth": 753,
+      "controlsOutsideViewport": []
+    },
+    {
+      "width": 1024,
+      "documentWidth": 1009,
+      "controlsOutsideViewport": []
+    },
+    {
+      "width": 1440,
+      "documentWidth": 1425,
+      "controlsOutsideViewport": []
+    },
+    {
+      "width": 375,
+      "documentWidth": 360,
+      "textScale": "200%"
+    },
+    {
+      "width": 1440,
+      "documentWidth": 1425,
+      "textScale": "200%"
+    }
+  ],
+  "interactions": [
+    "Round Robin reveals the recorded quantum and explanation",
+    "Job filters update selection",
+    "Selecting a queue job opens its details",
+    "Keyboard focus remains visible",
+    "System appearance follows light and dark settings; reduced motion disables transitions",
+    "Theme selection persists"
+  ],
+  "contrasts": [
+    {
+      "theme": "light",
+      "foreground": "text",
+      "background": "surface",
+      "ratio": 12.93,
+      "minimum": 4.5
+    },
+    {
+      "theme": "light",
+      "foreground": "text",
+      "background": "surface-subtle",
+      "ratio": 12.24,
+      "minimum": 4.5
+    },
+    {
+      "theme": "light",
+      "foreground": "text",
+      "background": "surface-hover",
+      "ratio": 11.35,
+      "minimum": 4.5
+    },
+    {
+      "theme": "light",
+      "foreground": "text",
+      "background": "page",
+      "ratio": 12.1,
+      "minimum": 4.5
+    },
+    {
+      "theme": "light",
+      "foreground": "text",
+      "background": "accent-soft",
+      "ratio": 11.52,
+      "minimum": 4.5
+    },
+    {
+      "theme": "light",
+      "foreground": "muted",
+      "background": "surface",
+      "ratio": 5.61,
+      "minimum": 4.5
+    },
+    {
+      "theme": "light",
+      "foreground": "muted",
+      "background": "surface-subtle",
+      "ratio": 5.31,
+      "minimum": 4.5
+    },
+    {
+      "theme": "light",
+      "foreground": "muted",
+      "background": "surface-hover",
+      "ratio": 4.92,
+      "minimum": 4.5
+    },
+    {
+      "theme": "light",
+      "foreground": "muted",
+      "background": "page",
+      "ratio": 5.25,
+      "minimum": 4.5
+    },
+    {
+      "theme": "light",
+      "foreground": "muted",
+      "background": "accent-soft",
+      "ratio": 5,
+      "minimum": 4.5
+    },
+    {
+      "theme": "light",
+      "foreground": "quiet",
+      "background": "surface",
+      "ratio": 5.61,
+      "minimum": 4.5
+    },
+    {
+      "theme": "light",
+      "foreground": "quiet",
+      "background": "surface-subtle",
+      "ratio": 5.31,
+      "minimum": 4.5
+    },
+    {
+      "theme": "light",
+      "foreground": "quiet",
+      "background": "surface-hover",
+      "ratio": 4.92,
+      "minimum": 4.5
+    },
+    {
+      "theme": "light",
+      "foreground": "quiet",
+      "background": "page",
+      "ratio": 5.25,
+      "minimum": 4.5
+    },
+    {
+      "theme": "light",
+      "foreground": "quiet",
+      "background": "accent-soft",
+      "ratio": 5,
+      "minimum": 4.5
+    },
+    {
+      "theme": "light",
+      "foreground": "accent-text",
+      "background": "accent-soft",
+      "ratio": 6.74,
+      "minimum": 4.5
+    },
+    {
+      "theme": "light",
+      "foreground": "on-accent",
+      "background": "action",
+      "ratio": 5.93,
+      "minimum": 4.5
+    },
+    {
+      "theme": "light",
+      "foreground": "on-accent",
+      "background": "accent-hover",
+      "ratio": 7.56,
+      "minimum": 4.5
+    },
+    {
+      "theme": "light",
+      "foreground": "success",
+      "background": "success-soft",
+      "ratio": 5.22,
+      "minimum": 4.5
+    },
+    {
+      "theme": "light",
+      "foreground": "warning",
+      "background": "warning-soft",
+      "ratio": 5.68,
+      "minimum": 4.5
+    },
+    {
+      "theme": "light",
+      "foreground": "danger",
+      "background": "danger-soft",
+      "ratio": 5.26,
+      "minimum": 4.5
+    },
+    {
+      "theme": "light",
+      "foreground": "control-border",
+      "background": "surface",
+      "ratio": 3.55,
+      "minimum": 3
+    },
+    {
+      "theme": "light",
+      "foreground": "accent",
+      "background": "surface",
+      "ratio": 4.1,
+      "minimum": 3
+    },
+    {
+      "theme": "light",
+      "foreground": "chart-secondary",
+      "background": "surface",
+      "ratio": 5.47,
+      "minimum": 3
+    },
+    {
+      "theme": "light",
+      "foreground": "control-border",
+      "background": "accent-soft",
+      "ratio": 3.17,
+      "minimum": 3
+    },
+    {
+      "theme": "dark",
+      "foreground": "text",
+      "background": "surface",
+      "ratio": 13.55,
+      "minimum": 4.5
+    },
+    {
+      "theme": "dark",
+      "foreground": "text",
+      "background": "surface-subtle",
+      "ratio": 14.56,
+      "minimum": 4.5
+    },
+    {
+      "theme": "dark",
+      "foreground": "text",
+      "background": "surface-hover",
+      "ratio": 10.64,
+      "minimum": 4.5
+    },
+    {
+      "theme": "dark",
+      "foreground": "text",
+      "background": "page",
+      "ratio": 15.5,
+      "minimum": 4.5
+    },
+    {
+      "theme": "dark",
+      "foreground": "text",
+      "background": "accent-soft",
+      "ratio": 10.46,
+      "minimum": 4.5
+    },
+    {
+      "theme": "dark",
+      "foreground": "muted",
+      "background": "surface",
+      "ratio": 7.71,
+      "minimum": 4.5
+    },
+    {
+      "theme": "dark",
+      "foreground": "muted",
+      "background": "surface-subtle",
+      "ratio": 8.29,
+      "minimum": 4.5
+    },
+    {
+      "theme": "dark",
+      "foreground": "muted",
+      "background": "surface-hover",
+      "ratio": 6.06,
+      "minimum": 4.5
+    },
+    {
+      "theme": "dark",
+      "foreground": "muted",
+      "background": "page",
+      "ratio": 8.82,
+      "minimum": 4.5
+    },
+    {
+      "theme": "dark",
+      "foreground": "muted",
+      "background": "accent-soft",
+      "ratio": 5.96,
+      "minimum": 4.5
+    },
+    {
+      "theme": "dark",
+      "foreground": "quiet",
+      "background": "surface",
+      "ratio": 6.58,
+      "minimum": 4.5
+    },
+    {
+      "theme": "dark",
+      "foreground": "quiet",
+      "background": "surface-subtle",
+      "ratio": 7.07,
+      "minimum": 4.5
+    },
+    {
+      "theme": "dark",
+      "foreground": "quiet",
+      "background": "surface-hover",
+      "ratio": 5.17,
+      "minimum": 4.5
+    },
+    {
+      "theme": "dark",
+      "foreground": "quiet",
+      "background": "page",
+      "ratio": 7.53,
+      "minimum": 4.5
+    },
+    {
+      "theme": "dark",
+      "foreground": "quiet",
+      "background": "accent-soft",
+      "ratio": 5.08,
+      "minimum": 4.5
+    },
+    {
+      "theme": "dark",
+      "foreground": "accent-text",
+      "background": "accent-soft",
+      "ratio": 6.92,
+      "minimum": 4.5
+    },
+    {
+      "theme": "dark",
+      "foreground": "on-accent",
+      "background": "action",
+      "ratio": 8.48,
+      "minimum": 4.5
+    },
+    {
+      "theme": "dark",
+      "foreground": "on-accent",
+      "background": "accent-hover",
+      "ratio": 10.66,
+      "minimum": 4.5
+    },
+    {
+      "theme": "dark",
+      "foreground": "success",
+      "background": "success-soft",
+      "ratio": 7.23,
+      "minimum": 4.5
+    },
+    {
+      "theme": "dark",
+      "foreground": "warning",
+      "background": "warning-soft",
+      "ratio": 8.26,
+      "minimum": 4.5
+    },
+    {
+      "theme": "dark",
+      "foreground": "danger",
+      "background": "danger-soft",
+      "ratio": 6.65,
+      "minimum": 4.5
+    },
+    {
+      "theme": "dark",
+      "foreground": "control-border",
+      "background": "surface",
+      "ratio": 4.72,
+      "minimum": 3
+    },
+    {
+      "theme": "dark",
+      "foreground": "accent",
+      "background": "surface",
+      "ratio": 6.98,
+      "minimum": 3
+    },
+    {
+      "theme": "dark",
+      "foreground": "chart-secondary",
+      "background": "surface",
+      "ratio": 10.1,
+      "minimum": 3
+    },
+    {
+      "theme": "dark",
+      "foreground": "control-border",
+      "background": "accent-soft",
+      "ratio": 3.64,
+      "minimum": 3
+    }
+  ],
+  "defaultTheme": "light",
+  "runtimeErrors": []
+}

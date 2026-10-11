@@ -304,11 +304,9 @@ export class OrchestratorService {
   /** One read that gives the dashboard everything it needs to render. */
   async state(query) {
     const now = this.clock();
-    const [rows, workers, statusCounts] = await Promise.all([
-      this.repository.listJobStates(query.limit),
-      this.repository.listWorkers(),
-      this.repository.countJobsByStatus(),
-    ]);
+    const { rows, workers, statusCounts, runningRows, scheduledUnplaced,
+      scheduledReserved, eligibleNow, waitingForArrival, activeReservations } =
+      await this.repository.readState(query.limit, now);
     const stageCounts = {
       QUEUE: 0,
       SCHEDULER: 0,
@@ -318,12 +316,15 @@ export class OrchestratorService {
       COMPLETED: 0,
       TERMINATED: 0,
     };
-    const runningByWorker = new Map();
-    let eligibleNow = 0;
-    let waitingForArrival = 0;
-    let activeReservations = 0;
-    let runningContainers = 0;
-    const jobs = rows.map((row) => {
+    for (const [status, count] of Object.entries(statusCounts)) {
+      if (status === JobStatus.SCHEDULED) continue;
+      stageCounts[derivePipelineStage({ status })] += count;
+    }
+    stageCounts.SCHEDULER = scheduledUnplaced;
+    stageCounts.RESERVATION = scheduledReserved;
+    stageCounts.PLACEMENT = (statusCounts.SCHEDULED ?? 0) - scheduledUnplaced - scheduledReserved;
+    const runningContainers = statusCounts.RUNNING ?? 0;
+    const jobView = (row) => {
       const { job } = row;
       const stage = derivePipelineStage({
         status: job.status,
@@ -331,25 +332,8 @@ export class OrchestratorService {
         hasActiveReservation: row.hasActiveReservation,
         executionStatus: row.execution?.status ?? null,
       });
-      stageCounts[stage] += 1;
       const eligible = isEligibleNow(job.status, job.arrivalAt, now);
-      if (eligible) eligibleNow += 1;
-      if (job.status === JobStatus.QUEUED && !eligible) waitingForArrival += 1;
-      if (row.hasActiveReservation) activeReservations += 1;
       const execution = row.execution;
-      const isRunning = job.status === JobStatus.RUNNING;
-      if (isRunning) {
-        runningContainers += 1;
-        if (job.assignedWorkerId) {
-          const entries = runningByWorker.get(job.assignedWorkerId) ?? [];
-          entries.push({
-            jobId: job.id,
-            jobName: job.name,
-            containerShortId: execution?.containerId?.slice(0, 12) ?? null,
-          });
-          runningByWorker.set(job.assignedWorkerId, entries);
-        }
-      }
       const elapsedSeconds = execution?.startedAt
         ? Math.max(
             0,
@@ -406,7 +390,17 @@ export class OrchestratorService {
         result: job.result,
         failureReason: job.failureReason,
       };
-    });
+    };
+    const jobs = rows.map(jobView);
+    const runningJobs = runningRows.map(jobView);
+    const runningByWorker = new Map();
+    for (const job of runningJobs) {
+      if (!job.assignedWorkerId) continue;
+      const entries = runningByWorker.get(job.assignedWorkerId) ?? [];
+      entries.push({ jobId: job.id, jobName: job.name,
+        containerShortId: job.execution?.containerShortId ?? null });
+      runningByWorker.set(job.assignedWorkerId, entries);
+    }
     return {
       capturedAt: now.toISOString(),
       hostMemory: {
@@ -415,6 +409,7 @@ export class OrchestratorService {
         workerBudgetMiB: workers.reduce((sum, worker) => sum + worker.memoryCapacityMiB, 0),
       },
       jobs,
+      runningJobs,
       workers: workers.map((entry) => ({
         id: entry.id,
         name: entry.name,

@@ -237,7 +237,8 @@ export function OrchestratorConsole() {
       );
       setSelectedJobId(null);
     });
-  const selected = state?.jobs.find((job) => job.id === selectedJobId) ?? null;
+  const selected = state?.jobs.find((job) => job.id === selectedJobId)
+    ?? state?.runningJobs?.find((job) => job.id === selectedJobId) ?? null;
   return (
     <>
       <ControlPanel

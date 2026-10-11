@@ -124,6 +124,22 @@ class StubRepository {
   async countJobsByStatus() {
     return this.options.statusCounts ?? {};
   }
+  async readState(limit, snapshotAt) {
+    const allRows = this.options.globalRows ?? this.options.rows ?? [];
+    const statusCounts = {};
+    for (const row of allRows) statusCounts[row.job.status] = (statusCounts[row.job.status] ?? 0) + 1;
+    return {
+      rows: (this.options.rows ?? []).slice(0, limit),
+      workers: this.options.workers ?? [],
+      statusCounts: this.options.statusCounts ?? statusCounts,
+      runningRows: allRows.filter((row) => row.job.status === JobStatus.RUNNING),
+      scheduledUnplaced: allRows.filter((row) => row.job.status === JobStatus.SCHEDULED && !row.job.assignedWorkerId).length,
+      scheduledReserved: allRows.filter((row) => row.job.status === JobStatus.SCHEDULED && row.job.assignedWorkerId && row.hasActiveReservation).length,
+      activeReservations: allRows.filter((row) => row.hasActiveReservation).length,
+      eligibleNow: allRows.filter((row) => isEligibleNow(row.job.status, row.job.arrivalAt, snapshotAt)).length,
+      waitingForArrival: allRows.filter((row) => row.job.status === JobStatus.QUEUED && row.job.arrivalAt > snapshotAt).length,
+    };
+  }
   async findJobById() {
     return null;
   }
@@ -776,6 +792,43 @@ test("the state snapshot groups jobs by stage and attaches workers and container
     },
   ]);
 });
+test("global pipeline and active worker jobs remain visible beyond the recent-job limit", async () => {
+  const worker = makeWorker({ status: WorkerStatus.BUSY, cpuAllocatedMillicores: 800, memoryAllocatedMiB: 256 });
+  const row = (job, overrides = {}) => ({ job, workerName: null,
+    hasActiveReservation: false, reservation: null, execution: null, ...overrides });
+  const completed = Array.from({ length: 199 }, () => row(makeJob({ status: JobStatus.COMPLETED })));
+  const running = row(makeJob({ status: JobStatus.RUNNING, assignedWorkerId: worker.id }), {
+    workerName: worker.name, hasActiveReservation: true,
+    reservation: { cpuMillicores: 800, memoryMiB: 256, reservedAt: now },
+    execution: makeExecution({ workerId: worker.id }),
+  });
+  const unplaced = row(makeJob({ status: JobStatus.SCHEDULED }));
+  const placed = row(makeJob({ status: JobStatus.SCHEDULED, assignedWorkerId: worker.id }));
+  const reserved = row(makeJob({ status: JobStatus.SCHEDULED, assignedWorkerId: worker.id }), {
+    hasActiveReservation: true, reservation: { cpuMillicores: 100, memoryMiB: 64, reservedAt: now },
+  });
+  const due = row(makeJob());
+  const future = row(makeJob({ arrivalAt: new Date(now.getTime() + 60_000) }));
+  const cancelled = row(makeJob({ status: JobStatus.CANCELLED }));
+  const service = new OrchestratorService(new StubRepository({
+    rows: completed, globalRows: [...completed, running, unplaced, placed, reserved, due, future, cancelled],
+    workers: [worker],
+  }), {}, {}, {}, {}, () => now);
+  const state = await service.state({ limit: 120 });
+  assert.equal(state.jobs.length, 120);
+  assert.equal(state.totals.jobs, 206);
+  assert.deepEqual(state.stageCounts, {
+    QUEUE: 2, SCHEDULER: 1, PLACEMENT: 1, RESERVATION: 1, EXECUTION: 1, COMPLETED: 199, TERMINATED: 1,
+  });
+  assert.equal(state.totals.runningContainers, 1);
+  assert.equal(state.totals.activeReservations, 2);
+  assert.equal(state.totals.eligibleNow, 1);
+  assert.equal(state.totals.waitingForArrival, 1);
+  assert.equal(state.workers[0].runningJobs[0].jobId, running.job.id);
+  assert.equal(state.runningJobs[0].id, running.job.id, "hidden active job still has an inspector view");
+  assert.equal(state.runningJobs[0].execution.containerShortId, "a".repeat(12));
+});
+
 test("a completed execution reports its measured duration, not a growing one", async () => {
   const worker = makeWorker();
   const job = makeJob({

@@ -76,13 +76,13 @@ A **worker** is a database record with a CPU and memory budget. The three starti
 - Run five fixed workload types in real Docker containers.
 - Save the result, execution time, exit code, and captured output.
 - Return resources after a completed, failed, or timed-out run.
+- Recover untracked executions after a restart and during periodic reconciliation.
 - View jobs, workers, resource use, timing summaries, and history in the browser.
 - Cancel a queued job and clear finished demo records.
 
 ## What is still planned
 
 - Automatically adding or removing workers when load changes.
-- Automatically recovering work after the backend crashes.
 - Stopping a running job from the dashboard.
 - Pausing a running job after a Round Robin time slice and resuming it later.
 - Machine-learning predictions and a complete experiment-comparison feature.

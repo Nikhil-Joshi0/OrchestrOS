@@ -139,13 +139,17 @@ Repeating an already completed settle or release returns the saved outcome. It s
 
 The dashboard regularly calls `GET /api/orchestrator/state` to display jobs, worker assignments, reservations, and execution progress.
 
-The live job queue shows the most recently updated jobs first, including jobs that just started, finished, or were cancelled. This display order does not change the scheduler's policy. The response limit applies after sorting, so new changes remain visible even with a large job history.
+The live job queue shows the most recently updated jobs first, including jobs that just started, finished, or were cancelled. This display order does not change the scheduler's policy. The response limit applies after sorting, so new changes remain visible even with a large job history. Pipeline counts, reservation totals, and worker running-job lists cover the whole database. Running-job details remain available from worker cards even when a job is outside the recent table. The orchestration endpoint reads these values from one repeatable database snapshot.
 
 The monitoring panel reads resource use and job timing summaries. It does not make scheduling decisions.
+
+Panels refresh independently. Job metrics show a loading or unavailable state until a successful read arrives; a returned zero is a measured zero. Failed refreshes retain the last successful values and their read time. API/database health is rechecked ten seconds after each completed check, with a ten-second request timeout; a recovered check clears the earlier error.
 
 The sampler separately saves one usage snapshot per worker at the configured interval. Rows from the same pass share a timestamp. A repeated pass at that timestamp does not add duplicates. Old samples are removed according to the retention setting.
 
 The collapsed **Monitoring tools** section contains **Refresh now** (read current metrics without saving anything) and **Save snapshot** (record one chart snapshot per worker immediately, even when the timer is disabled). Both are optional during normal automatic monitoring. The chart's saved-worker-snapshot count is historical observations, not completed jobs or an ML training dataset. CPU values use millicores: `1000m = 1 core`.
+
+The history chart shows CPU and memory reservations as percentages of worker capacity. Sample positions use their actual timestamps, and the axis labels show the returned start/end times rather than assuming a full hour of data. Lines join recorded values; the time between samples is unmeasured. **Sample values** provides the timestamps and numerical percentages in a table. With no samples in the window, the dashboard points to Save snapshot without assuming periodic sampling is enabled.
 
 ## 11. Manage individual records
 

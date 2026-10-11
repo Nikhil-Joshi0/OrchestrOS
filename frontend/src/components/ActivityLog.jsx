@@ -11,8 +11,7 @@ export function ActivityLog({ entries, onClear }) {
     <section className="panel activity-panel" aria-label="Activity log">
       <header className="panel-head">
         <div>
-          <p className="eyebrow">Activity</p>
-          <h2>What the backend reported</h2>
+          <h2>Activity</h2>
         </div>
         <button type="button" className="btn btn-ghost" onClick={onClear}>
           Clear

@@ -1,10 +1,11 @@
-/* Reference-inspired console layout. Native CSS keeps the dashboard lightweight. */
+/* A quiet workspace: blue for actions, neutral panels for operational data. */
 :root {
   color: var(--text);
   background: var(--page);
   font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   font-synthesis: none;
   text-rendering: optimizeLegibility;
+  line-height: 1.5;
   --mono: "Roboto Mono", ui-monospace, SFMono-Regular, Consolas, "Liberation Mono", monospace;
 }
 * {
@@ -23,6 +24,9 @@ body {
 button, input, select {
   font: inherit;
 }
+button, a, summary, select {
+  touch-action: manipulation;
+}
 button, a, summary {
   -webkit-tap-highlight-color: transparent;
 }
@@ -37,7 +41,7 @@ h1, h2, h3, p {
   margin-top: 0;
 }
 h2 {
-  font-size: 20px;
+  font-size: 1.125rem;
   line-height: 1.3;
   letter-spacing: -0.025em;
 }
@@ -56,23 +60,23 @@ a {
 }
 .mono {
   font-family: var(--mono);
-  font-size: 11px;
+  font-size: 0.75rem;
   font-variant-numeric: tabular-nums;
 }
 .muted, .hint {
   color: var(--muted);
 }
 .muted {
-  font-size: 12px;
+  font-size: 0.8125rem;
 }
 .hint {
   margin: 8px 0 0;
-  font-size: 11px;
+  font-size: 0.8125rem;
   line-height: 1.7;
 }
 .hint-inline {
   margin: 0;
-  font-size: 12px;
+  font-size: 0.8125rem;
 }
 .healthy {
   color: var(--success);
@@ -82,7 +86,7 @@ a {
 }
 .warn {
   color: var(--danger);
-  font-size: 12px;
+  font-size: 0.8125rem;
 }
 .sr-only {
   position: absolute;
@@ -96,21 +100,21 @@ a {
   border: 0;
 }
 
-/* Compact app chrome; the controls are the first thing on the page. */
+/* Familiar navigation and a short introduction, followed by the controls. */
 .shell {
-  width: min(1440px, 100%);
+  width: min(1400px, 100%);
   margin: 0 auto;
-  padding: 0 48px 28px;
+  padding: 0 40px 32px;
 }
 .console-header {
   display: flex;
   align-items: center;
   gap: 24px;
   min-height: 72px;
-  margin: 0 -48px 32px;
-  padding: 12px 48px;
+  margin: 0 -40px 28px;
+  padding: 12px 40px;
   border-bottom: 1px solid var(--border);
-  background: var(--page);
+  background: var(--surface);
 }
 .console-identity {
   display: flex;
@@ -121,7 +125,8 @@ a {
   white-space: nowrap;
 }
 .console-identity strong {
-  font-size: 16px;
+  font-size: 1rem;
+  letter-spacing: -0.025em;
 }
 .logo-mark {
   display: grid;
@@ -129,8 +134,8 @@ a {
   width: 32px;
   height: 32px;
   border-radius: 8px;
-  color: white;
-  background: var(--accent);
+  color: var(--accent-text);
+  background: var(--accent-soft);
 }
 .logo-mark .icon {
   width: 20px;
@@ -138,7 +143,9 @@ a {
 }
 .console-label {
   color: var(--quiet);
-  font-size: 11px;
+  padding-left: 12px;
+  border-left: 1px solid var(--border);
+  font-size: 0.75rem;
 }
 .console-header nav {
   display: flex;
@@ -146,25 +153,49 @@ a {
   margin-left: auto;
 }
 .console-header nav a {
-  padding: 8px 13px;
-  border-radius: 6px;
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 10px 12px;
+  border-radius: 5px;
   color: var(--muted);
-  font-size: 13px;
+  font-size: 0.8125rem;
   text-decoration: none;
   white-space: nowrap;
 }
-.console-header nav a:hover, .console-header nav a[aria-current] {
+.console-header nav a:hover {
   color: var(--text);
   background: var(--surface-hover);
 }
+.console-header nav a[aria-current] {
+  color: var(--accent-text);
+  background: var(--accent-soft);
+  box-shadow: inset 0 -2px var(--accent);
+}
 .theme-select {
-  border: 1px solid var(--border);
+  border: 1px solid var(--control-border);
   border-radius: 6px;
   color: var(--muted);
-  background: var(--page);
-  padding: 6px 8px;
-  font-size: 11px;
-  max-width: 82px;
+  background: var(--surface);
+  min-height: 40px;
+  padding: 8px;
+  font-size: 0.75rem;
+  max-width: 100px;
+}
+.workspace-heading {
+  margin-bottom: 24px;
+}
+.workspace-heading h1 {
+  margin: 0 0 6px;
+  font-size: 1.75rem;
+  font-weight: 600;
+  letter-spacing: -0.04em;
+  line-height: 1.25;
+}
+.workspace-heading p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.875rem;
 }
 .skip-link {
   position: absolute;
@@ -174,6 +205,7 @@ a {
   transform: translateY(-150%);
   background: var(--surface);
   color: var(--accent-text);
+  z-index: 1;
 }
 .skip-link:focus {
   transform: translateY(0);
@@ -182,14 +214,15 @@ a {
   scroll-margin-top: 24px;
 }
 
-/* Uniform panel headers and section tags. */
+/* Section titles carry hierarchy without decorative tags. */
 .panel {
   min-width: 0;
   margin-top: 20px;
   padding: 24px;
   border: 1px solid var(--border);
-  border-radius: 12px;
+  border-radius: 10px;
   background: var(--surface);
+  box-shadow: var(--shadow);
 }
 #console > .panel:first-child {
   margin-top: 0;
@@ -216,17 +249,20 @@ a {
   overflow-wrap: anywhere;
 }
 .eyebrow {
-  display: inline-block;
+  display: block;
   margin: 0;
-  padding: 3px 8px;
-  border-radius: 3px;
-  color: var(--accent-text);
-  background: var(--accent-soft);
-  font-size: 10px;
+  color: var(--muted);
+  font-size: 0.75rem;
   font-weight: 600;
-  line-height: 1.3;
-  text-transform: uppercase;
-  white-space: nowrap;
+  line-height: 1.5;
+}
+.section-count {
+  display: inline-block;
+  margin-left: 10px;
+  color: var(--muted);
+  font-size: 0.8125rem;
+  font-weight: 400;
+  letter-spacing: 0;
 }
 .worker-panel .panel-head > div, .job-detail-panel .panel-head > div {
   display: block;
@@ -241,19 +277,23 @@ a {
   justify-content: center;
   align-items: center;
   gap: 7px;
-  min-height: 38px;
-  padding: 9px 14px;
-  border: 1px solid var(--border);
+  min-height: 44px;
+  padding: 10px 16px;
+  border: 1px solid var(--control-border);
   border-radius: 7px;
-  color: var(--muted);
-  background: var(--surface-hover);
-  font-size: 12px;
+  color: var(--text);
+  background: var(--surface);
+  font-size: 0.8125rem;
   font-weight: 500;
-  transition: background 140ms ease, border-color 140ms ease;
+  transition: background 160ms ease, border-color 160ms ease;
 }
 .btn:hover:not(:disabled), .monitor-actions button:hover:not(:disabled) {
   color: var(--text);
   border-color: var(--accent);
+  background: var(--surface-hover);
+}
+.btn:active:not(:disabled), .monitor-actions button:active:not(:disabled) {
+  box-shadow: inset 0 0 0 1px currentColor;
 }
 .btn-primary {
   color: var(--on-accent);
@@ -266,21 +306,26 @@ a {
 }
 .btn-stop {
   color: var(--danger);
-  background: var(--danger-soft);
-  border-color: color-mix(in srgb, var(--danger) 30%, var(--border));
+  background: var(--surface);
+  border-color: var(--danger);
 }
-.btn-demo {
-  color: var(--success);
-  background: var(--success-soft);
-  border-color: color-mix(in srgb, var(--success) 20%, var(--border));
+.btn-stop:hover:not(:disabled) {
+  color: var(--danger);
+  border-color: var(--danger);
+  background: var(--danger-soft);
+}
+.btn-demo, .btn-secondary {
+  color: var(--accent-text);
+  background: var(--accent-soft);
+  border-color: var(--control-border);
 }
 .btn-ghost {
-  background: var(--surface-hover);
+  background: var(--surface);
 }
 .control-grid {
   display: grid;
-  grid-template-columns: 1.15fr 0.9fr 1.15fr;
-  gap: 28px;
+  grid-template-columns: 1.1fr 1.1fr 0.9fr;
+  gap: 24px;
 }
 .control-block {
   display: flex;
@@ -288,7 +333,7 @@ a {
   gap: 6px;
   min-width: 0;
   margin: 0;
-  padding: 0 0 0 28px;
+  padding: 0 0 0 24px;
   border: 0;
   border-left: 1px solid var(--border);
 }
@@ -302,8 +347,8 @@ a {
   margin-bottom: 14px;
   padding: 0;
   color: var(--text);
-  font-size: 13px;
-  font-weight: 500;
+  font-size: 0.875rem;
+  font-weight: 600;
 }
 .step-number {
   display: inline-grid;
@@ -311,26 +356,27 @@ a {
   width: 24px;
   height: 24px;
   margin-right: 10px;
-  border-radius: 5px;
-  color: var(--accent-text);
-  background: var(--accent-soft);
+  border-radius: 50%;
+  color: var(--muted);
+  border: 1px solid var(--border);
   font-family: var(--mono);
-  font-size: 12px;
+  font-size: 0.75rem;
 }
 .control-block label {
   margin-top: 6px;
   color: var(--muted);
-  font-size: 11px;
+  font-size: 0.8125rem;
+  font-weight: 500;
 }
 .control-block select, .control-block input {
   width: 100%;
-  min-height: 38px;
-  padding: 9px 11px;
-  border: 1px solid var(--border);
+  min-height: 44px;
+  padding: 10px 12px;
+  border: 1px solid var(--control-border);
   border-radius: 7px;
   color: var(--text);
-  background: var(--surface-subtle);
-  font-size: 12px;
+  background: var(--surface);
+  font-size: 0.8125rem;
 }
 .control-block select {
   text-overflow: ellipsis;
@@ -344,8 +390,8 @@ a {
 }
 .control-subtitle {
   margin: 20px 0 6px;
-  font-size: 13px;
-  font-weight: 500;
+  font-size: 0.875rem;
+  font-weight: 600;
 }
 .scheduling-note {
   display: flex;
@@ -368,7 +414,8 @@ a {
 .control-details summary, .stage-controls summary {
   color: var(--muted);
   cursor: pointer;
-  font-size: 12px;
+  padding-block: 8px;
+  font-size: 0.8125rem;
 }
 .control-details label {
   display: block;
@@ -381,14 +428,14 @@ a {
   border-radius: 8px;
   color: var(--danger);
   background: var(--danger-soft);
-  font-size: 12px;
+  font-size: 0.8125rem;
 }
 
 /* Pipeline keeps all six stages visible on desktop. */
 .pipeline {
   display: grid;
   grid-template-columns: repeat(6, minmax(0, 1fr));
-  gap: 6px;
+  gap: 0;
   list-style: none;
   margin: 0;
   padding: 0;
@@ -400,16 +447,25 @@ a {
   gap: 8px;
   min-width: 0;
   padding: 16px;
-  border: 1px solid transparent;
-  border-radius: 10px;
+  border: 1px solid var(--border);
+  border-radius: 0;
   background: var(--surface-subtle);
+}
+.pipeline-stage + .pipeline-stage {
+  border-left: 0;
+}
+.pipeline-stage:first-child {
+  border-radius: 8px 0 0 8px;
+}
+.pipeline-stage:last-child {
+  border-radius: 0 8px 8px 0;
 }
 .pipeline-stage.has-jobs {
   background: var(--accent-soft);
   border-color: color-mix(in srgb, var(--accent) 50%, var(--border));
 }
 .pipeline-stage.is-active {
-  border-color: var(--accent-text);
+  box-shadow: inset 0 0 0 2px var(--accent-text);
 }
 .pipeline-index {
   position: absolute;
@@ -417,17 +473,18 @@ a {
   right: 12px;
   color: var(--quiet);
   font-family: var(--mono);
-  font-size: 10px;
+  font-size: 0.75rem;
 }
 .pipeline-label {
-  padding-right: 10px;
+  padding-right: 14px;
   color: var(--muted);
-  font-size: 12px;
+  font-size: 0.8125rem;
   font-weight: 500;
+  overflow-wrap: anywhere;
 }
 .pipeline-count {
-  font-family: var(--mono);
-  font-size: 30px;
+  font-variant-numeric: tabular-nums;
+  font-size: 1.75rem;
   font-weight: 600;
   line-height: 1.25;
 }
@@ -436,8 +493,9 @@ a {
 }
 .pipeline-stage small {
   color: var(--quiet);
-  font-size: 10px;
+  font-size: 0.75rem;
   line-height: 1.5;
+  overflow-wrap: anywhere;
 }
 .pipeline-warning {
   display: flex;
@@ -449,14 +507,14 @@ a {
   border-radius: 0 0 12px 12px;
   color: var(--warning);
   background: var(--warning-soft);
-  font-size: 11px;
+  font-size: 0.75rem;
 }
 
 /* Three worker cards and a narrower job inspector. */
 .split {
   display: grid;
-  grid-template-columns: minmax(0, 2.9fr) minmax(280px, 1fr);
-  gap: 18px;
+  grid-template-columns: minmax(0, 2.5fr) minmax(300px, 1fr);
+  gap: 20px;
   align-items: start;
 }
 .worker-grid {
@@ -471,8 +529,8 @@ a {
   min-width: 0;
   padding: 18px;
   border: 1px solid var(--border);
-  border-radius: 10px;
-  background: var(--surface-subtle);
+  border-radius: 8px;
+  background: var(--surface);
 }
 .worker-card > header {
   display: flex;
@@ -481,7 +539,8 @@ a {
   gap: 8px;
 }
 .worker-card > header strong {
-  font-size: 12px;
+  font-size: 0.8125rem;
+  font-family: inherit;
 }
 .worker-running {
   display: flex;
@@ -493,7 +552,7 @@ a {
   overflow: auto;
 }
 .worker-running small {
-  font-size: 10px;
+  font-size: 0.75rem;
 }
 .worker-running .chip {
   max-width: 100%;
@@ -505,9 +564,8 @@ a {
   align-items: center;
   gap: 5px;
   padding: 3px 8px;
-  border-radius: 999px;
-  font-family: var(--mono);
-  font-size: 9px;
+  border-radius: 5px;
+  font-size: 0.6875rem;
   font-weight: 500;
   letter-spacing: 0.015em;
   white-space: nowrap;
@@ -579,14 +637,14 @@ a {
   font-family: var(--mono);
 }
 .gauge-center strong {
-  font-size: 14px;
-  color: var(--muted);
+  font-size: 1rem;
+  color: var(--text);
   font-weight: 500;
 }
 .gauge-center span {
   color: var(--quiet);
   font-family: Inter, sans-serif;
-  font-size: 10px;
+  font-size: 0.75rem;
 }
 .capacity-legend {
   margin: 0;
@@ -598,21 +656,23 @@ a {
   justify-content: space-between;
   align-items: center;
   gap: 8px;
+  flex-wrap: wrap;
 }
 .capacity-legend dt {
   display: flex;
   align-items: center;
   gap: 6px;
   color: var(--muted);
-  font-size: 10px;
+  font-size: 0.75rem;
   white-space: nowrap;
 }
 .capacity-legend dd {
   margin: 0;
   color: var(--muted);
   font-family: var(--mono);
-  font-size: 10px;
+  font-size: 0.75rem;
   white-space: nowrap;
+  margin-left: auto;
 }
 .metric-dot {
   width: 7px;
@@ -635,13 +695,14 @@ a {
   margin: 0 0 16px;
 }
 .chip {
-  padding: 6px 10px;
-  border: 1px solid var(--border);
-  border-radius: 999px;
+  min-height: 36px;
+  padding: 8px 12px;
+  border: 1px solid var(--control-border);
+  border-radius: 6px;
   color: var(--muted);
-  background: var(--surface-subtle);
-  font-family: var(--mono);
-  font-size: 10px;
+  background: var(--surface);
+  font-family: inherit;
+  font-size: 0.75rem;
   line-height: 1.3;
   font-weight: 400;
 }
@@ -649,6 +710,11 @@ a {
   color: var(--accent-text);
   background: var(--accent-soft);
   border-color: var(--accent);
+}
+.chip:hover:not(:disabled) {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+  color: var(--accent-text);
 }
 .chip-live {
   color: var(--success);
@@ -663,7 +729,7 @@ a {
 }
 .chips .chip {
   border-color: transparent;
-  font-size: 9px;
+  font-size: 0.6875rem;
 }
 .chips .status-completed {
   color: var(--success);
@@ -688,21 +754,20 @@ a {
 .grid {
   width: 100%;
   border-collapse: collapse;
-  font-size: 11px;
+  font-size: 0.8125rem;
   font-variant-numeric: tabular-nums;
 }
 .grid th {
-  padding: 0 12px 9px 0;
+  padding: 12px;
   color: var(--quiet);
-  font-family: var(--mono);
-  font-size: 9px;
-  font-weight: 400;
-  text-transform: uppercase;
+  background: var(--surface-subtle);
+  font-size: 0.75rem;
+  font-weight: 500;
   text-align: left;
   white-space: nowrap;
 }
 .grid td {
-  padding: 8px 12px 8px 0;
+  padding: 12px;
   border-top: 1px solid var(--border);
   color: var(--text);
   white-space: nowrap;
@@ -718,11 +783,10 @@ a {
 }
 .queue-panel .grid {
   min-width: 940px;
-  font-family: var(--mono);
 }
 .queue-panel .grid td {
-  padding-top: 5px;
-  padding-bottom: 5px;
+  padding-top: 10px;
+  padding-bottom: 10px;
 }
 .queue-panel .grid td:nth-child(2) {
   font-family: Inter, sans-serif;
@@ -734,7 +798,10 @@ a {
   background: var(--accent-soft);
 }
 .link {
-  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  min-height: 28px;
+  padding: 2px 0;
   border: 0;
   background: none;
   color: var(--accent-text);
@@ -756,11 +823,11 @@ a {
 }
 .facts dt {
   color: var(--muted);
-  font-size: 10px;
+  font-size: 0.75rem;
 }
 .facts dd {
   margin: 4px 0 0;
-  font-size: 12px;
+  font-size: 0.8125rem;
   line-height: 1.6;
   overflow-wrap: anywhere;
 }
@@ -780,7 +847,7 @@ a {
 .empty-state p {
   margin: 0;
   max-width: 230px;
-  font-size: 12px;
+  font-size: 0.8125rem;
   line-height: 1.7;
 }
 .empty-icon {
@@ -811,11 +878,11 @@ a {
   overflow-wrap: anywhere;
 }
 .callout strong {
-  font-size: 12px;
+  font-size: 0.8125rem;
 }
 .callout small {
   color: var(--muted);
-  font-size: 11px;
+  font-size: 0.75rem;
   line-height: 1.6;
 }
 .callout-db {
@@ -872,7 +939,7 @@ a {
   gap: 12px;
   padding: 10px 0;
   border-top: 1px solid var(--border);
-  font-size: 11px;
+  font-size: 0.8125rem;
   line-height: 1.6;
 }
 .log li:first-child {
@@ -894,11 +961,11 @@ a {
   margin: 12px 0 0;
   color: var(--quiet);
   font-family: var(--mono);
-  font-size: 10px;
+  font-size: 0.75rem;
   line-height: 1.6;
 }
 
-/* Monitoring follows the same console geometry and violet/cyan data colors. */
+/* Monitoring uses the same sky-blue CPU and teal memory colors as the workers. */
 .monitor {
   margin-top: 32px;
 }
@@ -915,10 +982,12 @@ a {
 .monitor-actions {
   display: flex;
   gap: 8px;
+  flex-wrap: wrap;
 }
 .monitor-tools {
+  min-width: 0;
   max-width: 370px;
-  font-size: 12px;
+  font-size: 0.8125rem;
 }
 .monitor-tools summary {
   cursor: pointer;
@@ -940,16 +1009,17 @@ a {
   min-width: 0;
   padding: 24px;
   border: 1px solid var(--border);
-  border-radius: 12px;
+  border-radius: 10px;
   background: var(--surface);
+  box-shadow: var(--shadow);
 }
 .tile.wide {
   margin-top: 16px;
 }
 .tile h3 {
   margin: 0 0 24px;
-  font-size: 13px;
-  font-weight: 500;
+  font-size: 0.9375rem;
+  font-weight: 600;
 }
 .reserved-tile .capacity-gauge {
   width: 130px;
@@ -964,13 +1034,12 @@ a {
 }
 .stats dt {
   color: var(--muted);
-  font-size: 11px;
+  font-size: 0.8125rem;
   line-height: 1.5;
 }
 .stats dd {
   margin: 8px 0 0;
-  font-family: var(--mono);
-  font-size: 28px;
+  font-size: 1.75rem;
   font-weight: 500;
   font-variant-numeric: tabular-nums;
 }
@@ -982,11 +1051,10 @@ a {
 }
 .chart-heading span {
   color: var(--quiet);
-  font-size: 10px;
+  font-size: 0.75rem;
 }
 .spark {
   margin: 0;
-  height: 218px;
 }
 .spark-placeholder {
   height: 218px;
@@ -999,6 +1067,46 @@ a {
   height: 170px;
   margin-top: 12px;
   overflow: visible;
+}
+.spark-plot {
+  display: grid;
+  grid-template-columns: 36px minmax(0, 1fr);
+  gap: 10px;
+}
+.spark-scale {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 170px;
+  margin-top: 12px;
+  color: var(--quiet);
+  font-size: 0.75rem;
+}
+.spark-times {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  margin: 8px 0 0 46px;
+  color: var(--muted);
+  font-size: 0.75rem;
+}
+.spark-times > :last-child {
+  text-align: right;
+}
+.spark-point-cpu {
+  fill: var(--accent);
+}
+.spark-point-memory {
+  fill: var(--chart-secondary);
+}
+.sample-values {
+  margin-top: 12px;
+  color: var(--muted);
+  font-size: 0.8125rem;
+}
+.sample-values summary {
+  cursor: pointer;
+  margin-bottom: 12px;
 }
 .spark path {
   fill: none;
@@ -1027,7 +1135,7 @@ a {
   align-items: center;
   gap: 7px;
   color: var(--muted);
-  font-size: 11px;
+  font-size: 0.75rem;
 }
 .key::before {
   width: 18px;
@@ -1077,7 +1185,7 @@ a {
   gap: 6px;
   padding: 14px 0;
   border-top: 1px solid var(--border);
-  font-size: 12px;
+  font-size: 0.8125rem;
 }
 .runlist li:first-child {
   border-top: 0;
@@ -1092,7 +1200,7 @@ a {
 .foundation-details summary {
   cursor: pointer;
   color: var(--muted);
-  font-size: 12px;
+  font-size: 0.8125rem;
 }
 .foundation-panel {
   display: grid;
@@ -1108,7 +1216,7 @@ a {
 }
 .foundation-panel p, .foundation-panel li {
   color: var(--muted);
-  font-size: 12px;
+  font-size: 0.8125rem;
   line-height: 1.8;
 }
 .foundation-panel ul {
@@ -1123,7 +1231,7 @@ a {
 .workspace-footer {
   margin-top: 24px;
   color: var(--muted);
-  font-size: 10px;
+  font-size: 0.75rem;
 }
 
 /* Responsive reflow, rather than fixed dimensions from the design export. */
@@ -1154,14 +1262,14 @@ a {
     padding: 12px;
   }
   .pipeline-label {
-    font-size: 11px;
+    font-size: 0.8125rem;
   }
   .pipeline-index {
     top: 12px;
     right: 8px;
   }
 }
-@media (max-width: 1000px) {
+@media (max-width: 1100px) {
   .console-header {
     flex-wrap: wrap;
   }
@@ -1214,12 +1322,12 @@ a {
     margin-bottom: 20px;
   }
   .console-header nav {
-    gap: 0;
-    justify-content: space-between;
+    gap: 4px;
+    flex-wrap: wrap;
   }
   .console-header nav a {
     padding: 8px;
-    font-size: 11px;
+    font-size: 0.75rem;
   }
   .panel, .tile {
     padding: 18px;
@@ -1230,7 +1338,7 @@ a {
     flex-wrap: wrap;
   }
   .panel-head h2 {
-    font-size: 18px;
+    font-size: 1.125rem;
   }
   .panel-head > div:first-child {
     gap: 8px;
@@ -1253,6 +1361,14 @@ a {
     grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 8px;
   }
+  .pipeline-stage, .pipeline-stage + .pipeline-stage,
+  .pipeline-stage:first-child, .pipeline-stage:last-child {
+    border: 1px solid var(--border);
+    border-radius: 6px;
+  }
+  .pipeline-stage.has-jobs {
+    border-color: var(--accent);
+  }
   .pipeline-warning {
     margin: 18px -18px -18px;
     padding-inline: 18px;
@@ -1270,7 +1386,7 @@ a {
     flex-wrap: wrap;
   }
   .stats dd {
-    font-size: 26px;
+    font-size: 1.625rem;
   }
   .chart-heading {
     flex-wrap: wrap;
@@ -1286,6 +1402,21 @@ a {
   }
   .workspace-footer {
     align-items: flex-start;
+  }
+  .control-block select, .control-block input {
+    font-size: 1rem;
+  }
+  .theme-select, .chip, .monitor-tools summary, .sample-values summary,
+  .foundation-details summary, .control-details summary, .stage-controls summary {
+    min-height: 44px;
+  }
+  .facts {
+    grid-template-columns: 1fr;
+  }
+}
+@media (max-width: 480px) {
+  .pipeline {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 @media (prefers-reduced-motion: reduce) {

@@ -6,8 +6,7 @@ export function WorkerGrid({ workers, onSelectJob }) {
     <section className="panel worker-panel" aria-label="Workers">
       <header className="panel-head">
         <div>
-          <p className="eyebrow">Logical workers</p>
-          <h2>Capacity and running containers</h2>
+          <h2>Workers</h2>
         </div>
       </header>
       <p className="hint worker-explanation">

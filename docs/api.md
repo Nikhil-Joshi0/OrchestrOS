@@ -31,7 +31,7 @@ Example run request:
 
 State accepts `limit` from 1-200, default 60. A run response reports which steps happened; it does not mean all started containers have finished.
 
-State jobs are ordered by `updatedAt` descending before applying `limit`; each job includes its `updatedAt` timestamp. This is dashboard display ordering and does not affect job scheduling. `statusCounts` covers all jobs, including those outside the displayed limit.
+State jobs are ordered by `updatedAt` descending before applying `limit`; each job includes its `updatedAt` timestamp. This is dashboard display ordering and does not affect job scheduling. `statusCounts`, `stageCounts`, and all `totals` cover all jobs, including those outside the displayed limit. The read uses a repeatable database snapshot. Worker `runningJobs` lists and the top-level `runningJobs` inspector records include all running jobs independently of the table limit.
 
 ## 2. Job and worker records
 

@@ -11,13 +11,12 @@ export function JobDetail(props) {
       <section className="panel job-detail-panel" aria-label="Job detail">
         <header className="panel-head">
           <div>
-            <p className="eyebrow">Job detail</p>
-            <h2>Nothing selected</h2>
+            <h2>Job details</h2>
           </div>
         </header>
         <div className="job-detail-viewport empty-state job-empty">
           <span className="empty-icon"><Icon name="cursor" /></span>
-          <p>Pick a job from the queue to see exactly what happened to it.</p>
+          <p>Select a job in the queue to see its progress and results.</p>
         </div>
       </section>
     );

@@ -1,76 +1,83 @@
-/* Palette from the supplied console reference; status colors retain their meaning. */
+/* Sky blue identifies actions and reserved CPU; status colors have separate roles. */
 :root {
-  color-scheme: dark;
-  --page: #0f1117;
-  --surface: #161b27;
-  --surface-subtle: #0f1117;
-  --surface-hover: #202633;
-  --text: #f1f5f9;
-  --muted: #94a3b8;
-  --quiet: #8290a8;
-  --border: #242b39;
-  --accent: #6366f1;
-  --action: #6062ec;
-  --accent-text: #a5b4fc;
-  --accent-hover: #595ce1;
-  --accent-soft: #202d49;
+  color-scheme: light;
+  --page: #f3f8fc;
+  --surface: #ffffff;
+  --surface-subtle: #f6f9fc;
+  --surface-hover: #eaf1f7;
+  --text: #193447;
+  --muted: #526b7a;
+  --quiet: #526b7a;
+  --border: #d8e3ec;
+  --control-border: #738b9d;
+  --accent: #0284c7;
+  --action: #0369a1;
+  --accent-text: #075985;
+  --accent-hover: #075985;
+  --accent-soft: #e6f4fc;
   --on-accent: #ffffff;
-  --success: #4ade80;
-  --success-soft: #123d27;
-  --warning: #fbbf24;
-  --warning-soft: #302514;
-  --danger: #fb7185;
-  --danger-soft: #351a25;
-  --chart-secondary: #06b6d4;
+  --success: #21744d;
+  --success-soft: #edf7f0;
+  --warning: #8a560d;
+  --warning-soft: #fff5e3;
+  --danger: #af3d40;
+  --danger-soft: #fceff0;
+  --chart-secondary: #0f766e;
+  --shadow: 0 2px 8px rgb(25 52 71 / 3%);
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --page: #101d28;
+  --surface: #172935;
+  --surface-subtle: #13232e;
+  --surface-hover: #223b49;
+  --text: #edf5fa;
+  --muted: #a9bdcc;
+  --quiet: #9aafbe;
+  --border: #314856;
+  --control-border: #7895a3;
+  --accent: #38bdf8;
+  --action: #7dd3fc;
+  --accent-text: #7dd3fc;
+  --accent-hover: #bae6fd;
+  --accent-soft: #173d50;
+  --on-accent: #0c2e42;
+  --success: #86d7ad;
+  --success-soft: #183b30;
+  --warning: #f5c875;
+  --warning-soft: #3a301e;
+  --danger: #f5a2a6;
+  --danger-soft: #402a32;
+  --chart-secondary: #5eead4;
   --shadow: none;
 }
 
-:root[data-theme="light"] {
-  color-scheme: light;
-  --page: #f4f5f9;
-  --surface: #ffffff;
-  --surface-subtle: #f5f6fa;
-  --surface-hover: #e9ecf4;
-  --text: #192235;
-  --muted: #53627a;
-  --quiet: #53627a;
-  --border: #dbe0eb;
-  --accent: #5154d8;
-  --action: #5154d8;
-  --accent-text: #4649b9;
-  --accent-hover: #4245c4;
-  --accent-soft: #eceeff;
-  --success: #176b3d;
-  --success-soft: #e3f4e9;
-  --warning: #805408;
-  --warning-soft: #fff3d6;
-  --danger: #b62a43;
-  --danger-soft: #fce8ed;
-  --chart-secondary: #08758c;
-}
-
-@media (prefers-color-scheme: light) {
+@media (prefers-color-scheme: dark) {
   :root[data-theme="system"] {
-    color-scheme: light;
-    --page: #f4f5f9;
-    --surface: #ffffff;
-    --surface-subtle: #f5f6fa;
-    --surface-hover: #e9ecf4;
-    --text: #192235;
-    --muted: #53627a;
-    --quiet: #53627a;
-    --border: #dbe0eb;
-    --accent: #5154d8;
-    --action: #5154d8;
-    --accent-text: #4649b9;
-    --accent-hover: #4245c4;
-    --accent-soft: #eceeff;
-    --success: #176b3d;
-    --success-soft: #e3f4e9;
-    --warning: #805408;
-    --warning-soft: #fff3d6;
-    --danger: #b62a43;
-    --danger-soft: #fce8ed;
-    --chart-secondary: #08758c;
+    color-scheme: dark;
+    --page: #101d28;
+    --surface: #172935;
+    --surface-subtle: #13232e;
+    --surface-hover: #223b49;
+    --text: #edf5fa;
+    --muted: #a9bdcc;
+    --quiet: #9aafbe;
+    --border: #314856;
+    --control-border: #7895a3;
+    --accent: #38bdf8;
+    --action: #7dd3fc;
+    --accent-text: #7dd3fc;
+    --accent-hover: #bae6fd;
+    --accent-soft: #173d50;
+    --on-accent: #0c2e42;
+    --success: #86d7ad;
+    --success-soft: #183b30;
+    --warning: #f5c875;
+    --warning-soft: #3a301e;
+    --danger: #f5a2a6;
+    --danger-soft: #402a32;
+    --chart-secondary: #5eead4;
+    --shadow: none;
   }
 }

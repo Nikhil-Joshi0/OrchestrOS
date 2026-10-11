@@ -232,6 +232,67 @@ test(
   },
 );
 test(
+  "global state includes running and scheduled jobs omitted from recent rows",
+  { skip: !databaseTestsEnabled },
+  async () => {
+    const prefix = `orch-global-${randomUUID().slice(0, 8)}`;
+    const snapshotAt = new Date();
+    try {
+      const service = new OrchestratorService(undefined, undefined, undefined, undefined, undefined, () => snapshotAt);
+      const baseline = await service.state({ limit: 1 });
+      const worker = await makeWorker(prefix);
+      const createJob = (status, overrides = {}) => prisma.job.create({ data: {
+        name: `${prefix}-${randomUUID().slice(0, 6)}`, workloadType: WorkloadType.SLEEP,
+        workloadSize: 4, cpuRequiredMillicores: 800, memoryRequiredMiB: 256,
+        estimatedDurationSeconds: 4, status, arrivalAt: new Date(snapshotAt.getTime() - 1000),
+        ...overrides,
+      } });
+      const running = await createJob(JobStatus.RUNNING, { assignedWorkerId: worker.id, startedAt: snapshotAt });
+      const allocation = await prisma.resourceAllocation.create({ data: {
+        jobId: running.id, workerId: worker.id, cpuMillicores: 800, memoryMiB: 256,
+      } });
+      await prisma.jobExecution.create({ data: {
+        jobId: running.id, workerId: worker.id, allocationId: allocation.id,
+        attempt: 1, status: ExecutionStatus.RUNNING, startedAt: snapshotAt, containerId: "c".repeat(64),
+      } });
+      const reserved = await createJob(JobStatus.SCHEDULED, { assignedWorkerId: worker.id });
+      await prisma.resourceAllocation.create({ data: {
+        jobId: reserved.id, workerId: worker.id, cpuMillicores: 800, memoryMiB: 256,
+      } });
+      await prisma.worker.update({ where: { id: worker.id }, data: {
+        cpuAllocatedMillicores: 1600, memoryAllocatedMiB: 512, status: WorkerStatus.BUSY,
+      } });
+      await createJob(JobStatus.SCHEDULED, { assignedWorkerId: worker.id });
+      await createJob(JobStatus.SCHEDULED);
+      await createJob(JobStatus.QUEUED);
+      await createJob(JobStatus.QUEUED, { arrivalAt: new Date(snapshotAt.getTime() + 60_000) });
+      await prisma.job.createMany({ data: Array.from({ length: 120 }, (_, index) => ({
+        name: `${prefix}-recent-${index}`, workloadType: WorkloadType.SLEEP,
+        workloadSize: 4, cpuRequiredMillicores: 250, memoryRequiredMiB: 128,
+        estimatedDurationSeconds: 4, status: JobStatus.COMPLETED, completedAt: snapshotAt,
+        updatedAt: new Date(snapshotAt.getTime() + 60_000 + index),
+      })) });
+      const state = await service.state({ limit: 120 });
+      assert.equal(state.jobs.length, 120);
+      assert.ok(state.jobs.every((job) => job.name.startsWith(`${prefix}-recent-`)));
+      assert.equal(state.totals.jobs - baseline.totals.jobs, 126);
+      for (const [stage, added] of Object.entries({ COMPLETED: 120, EXECUTION: 1, SCHEDULER: 1, PLACEMENT: 1, RESERVATION: 1, QUEUE: 2 })) {
+        assert.equal(state.stageCounts[stage] - baseline.stageCounts[stage], added, stage);
+      }
+      assert.equal(state.totals.activeReservations - baseline.totals.activeReservations, 2);
+      assert.equal(state.totals.runningContainers - baseline.totals.runningContainers, 1);
+      assert.equal(state.totals.eligibleNow - baseline.totals.eligibleNow, 1);
+      assert.equal(state.totals.waitingForArrival - baseline.totals.waitingForArrival, 1);
+      assert.equal(state.workers.find((entry) => entry.id === worker.id).runningJobs[0].jobId, running.id);
+      assert.equal(state.runningJobs.find((entry) => entry.id === running.id).execution.containerShortId, "c".repeat(12));
+    } finally {
+      await cleanup(prefix);
+      await prisma.$disconnect();
+    }
+  },
+);
+
+test(
   "one orchestrator call schedules, places, and reserves a queued job",
   { skip: !databaseTestsEnabled },
   async () => {
