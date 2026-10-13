@@ -1,10 +1,21 @@
 # Dependencies
 node_modules/
 
+# Local AI assistant configuration and installed skills
+.agent/
+.agents/
+.claude/
+.codex/
+.cursor/
+
 # Build, test, and tool output
 dist/
 coverage/
 .vite/
+.cache/
+__pycache__/
+*.py[cod]
+*.tsbuildinfo
 *.log
 npm-debug.log*
 
