@@ -41,7 +41,7 @@ export function ControlPanel(props) {
   } = props;
   const disabled = busy !== null;
   return (
-    <section className="panel" aria-label="Orchestrator controls">
+    <section className="panel control-panel" aria-label="Orchestrator controls" aria-busy={disabled}>
       <header className="panel-head">
         <div>
           <h2>Prepare a run</h2>
@@ -209,6 +209,11 @@ export function ControlPanel(props) {
         {/* 4. Execution */}
         <fieldset className="control-block">
           <legend><span className="step-number">4</span>Run the orchestrator</legend>
+
+          <p className={`run-state${autoRunning ? " is-running" : ""}`} role="status">
+            <span aria-hidden="true" />
+            {autoRunning ? "Automatic scheduling active" : "Ready for your next run"}
+          </p>
 
           <button
             type="button"

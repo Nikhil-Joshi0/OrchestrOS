@@ -79,6 +79,10 @@ export function App() {
     });
     return () => poller.stop();
   }, []);
+  const servicesConnected = !error && health?.status === "ok" && health?.dependencies?.database === "up";
+  const connectionLabel = error ? "Connection unavailable"
+    : servicesConnected ? "Systems connected"
+      : health?.status === "degraded" ? "Service degraded" : "Connecting to services";
   return (
     <main className="shell" id="overview">
       <a className="skip-link" href="#console">Skip to controls</a>
@@ -106,8 +110,18 @@ export function App() {
       </header>
 
       <div className="workspace-heading">
-        <h1>Workload console</h1>
-        <p>Create jobs, choose a policy, and follow each run.</p>
+        <div>
+          <p className="workspace-kicker">Local workspace</p>
+          <h1>Workload console<span className="heading-period">.</span></h1>
+          <p>Create jobs, choose a policy, and follow each run.</p>
+        </div>
+        <div className="workspace-status" role="status">
+          <span className={`connection-indicator${servicesConnected ? " is-connected" : ""}`} aria-hidden="true" />
+          <div>
+            <strong>{connectionLabel}</strong>
+            <span>Local compute. Persistent state.</span>
+          </div>
+        </div>
       </div>
 
       {error ? (

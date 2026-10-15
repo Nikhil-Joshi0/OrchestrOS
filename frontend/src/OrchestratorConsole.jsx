@@ -349,7 +349,13 @@ export function OrchestratorConsole() {
           </p>
         </>
       ) : (
-        <p className="muted">Loading orchestrator state…</p>
+        <div className="console-loading" role="status">
+          <span className="loading-indicator" aria-hidden="true" />
+          <div>
+            <strong>{error ? "Waiting for a connection" : "Loading your workspace"}</strong>
+            <p>{error ? "The console will retry automatically." : "Reading jobs, workers, and reserved capacity."}</p>
+          </div>
+        </div>
       )}
     </>
   );
